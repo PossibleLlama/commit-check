@@ -12,7 +12,7 @@ import (
 var (
 	// Based on https://www.conventionalcommits.org/
 	// TODO allow config to choose between these lists
-	conventionTypes = []string{
+	defaultConventionTypes = []string{
 		"fix",
 		"feat",
 		"BREAKING CHANGE",
@@ -34,9 +34,17 @@ var (
 )
 
 func promptType() string {
+	var prefixChoices []string
+	switch conventionType {
+	case "angular":
+		prefixChoices = angularConventionTypes
+	case "conventional":
+		prefixChoices = defaultConventionTypes
+	}
+
 	prefixPrompt := promptui.Select{
 		Label: "Select type of change",
-		Items: conventionTypes,
+		Items: prefixChoices,
 	}
 	_, prefixAsStr, prefixErr := prefixPrompt.Run()
 	if prefixErr != nil {

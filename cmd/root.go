@@ -8,10 +8,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var conventionType string
+var VERSION string
+
 var rootCmd = &cobra.Command{
 	Use:   "commit-check",
 	Short: "Verify your commits have a common format",
 	Run: func(cmd *cobra.Command, args []string) {
+		if conventionType != "angular" && conventionType != "conventional" {
+			fmt.Println("convention type must be either angular or conventional but was", conventionType)
+			os.Exit(1)
+		}
+
 		prefix := promptType()
 		scope := promptScope()
 		message := promptMessage()
@@ -31,6 +39,7 @@ var rootCmd = &cobra.Command{
 		}
 		fmt.Println(string(osCmdOutput))
 	},
+	Version: VERSION,
 }
 
 func Execute() {
@@ -40,4 +49,10 @@ func Execute() {
 	}
 }
 
-func init() {}
+func init() {
+	rootCmd.Flags().StringVarP(&conventionType,
+		"type",
+		"t",
+		"conventional",
+		"accepts either 'conventional' or 'angular'")
+}
