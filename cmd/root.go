@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -46,14 +47,14 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		// TODO get input of message
+		// TODO get input of messages
 
-		commitArgs := append([]string{"commit", "-m", prefixAsStr, ": "}, args...)
+		commitArgs := []string{"commit", "-m", "\"" + prefixAsStr + ": " + strings.Join(args, " ") + "\""}
 		runOsCmd := exec.Command("git", commitArgs...)
 
 		osCmdOutput, runErr := runOsCmd.CombinedOutput()
 		if runErr != nil {
-			fmt.Println("failed to run with error:", runErr.Error())
+			fmt.Println("failed to commit with error:", string(osCmdOutput))
 			os.Exit(1)
 		}
 		fmt.Println(string(osCmdOutput))
