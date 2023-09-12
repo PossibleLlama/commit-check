@@ -47,9 +47,10 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		// TODO get prefix from JIRA/Clickup/other
 		// TODO get input of messages
 
-		commitArgs := []string{"commit", "-m", "\"" + prefixAsStr + ": " + strings.Join(args, " ") + "\""}
+		commitArgs := []string{"commit", "-m", prefixAsStr + ": " + strings.Join(args, " ")}
 		runOsCmd := exec.Command("git", commitArgs...)
 
 		osCmdOutput, runErr := runOsCmd.CombinedOutput()
