@@ -28,6 +28,7 @@ var (
 		"refactor",
 		"perf",
 		"test",
+		"revert",
 		"BREAKING CHANGE",
 	}
 )
@@ -47,7 +48,7 @@ func promptType() string {
 
 func promptScope() string {
 	scopePrompt := promptui.Prompt{
-		Label: "(Optional) Scope of change (JIRA or ClickUp ticket)",
+		Label: "(Optional) Scope of change - section of codebase, or a ticket reference",
 	}
 
 	scope, scopeErr := scopePrompt.Run()

@@ -16,9 +16,6 @@ var rootCmd = &cobra.Command{
 		scope := promptScope()
 		message := promptMessage()
 
-		// TODO get prefix from JIRA/Clickup/other
-		// TODO get input of messages
-
 		if scope != "" {
 			prefix = prefix + "(" + scope + "): "
 		} else {
