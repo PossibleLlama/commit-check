@@ -37,7 +37,7 @@ func promptType() string {
 	switch conventionType {
 	case "angular":
 		prefixChoices = typeAngular
-	case "conventional":
+	case "conventionalcommit":
 		prefixChoices = typeConventionalCommit
 	}
 
