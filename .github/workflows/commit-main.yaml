@@ -1,4 +1,4 @@
-name: "On commit"
+name: "On commit - Main"
 
 on:
   push:
