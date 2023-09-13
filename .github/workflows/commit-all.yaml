@@ -2,6 +2,8 @@ name: "On commit"
 
 on: push
 
+permissions: read-all
+
 jobs:
   binary:
     name: Binary

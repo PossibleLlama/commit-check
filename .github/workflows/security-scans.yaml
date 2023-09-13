@@ -2,6 +2,8 @@ name: "Security scans"
 
 on: push
 
+permissions: read-all
+
 jobs:
   SCA:
     name: SCA
