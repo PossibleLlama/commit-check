@@ -1,0 +1,54 @@
+name: "On commit"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  binary:
+    name: Binary
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v3
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: "./go.mod"
+
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Build
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
+
+    - name: Store binary
+      uses: actions/upload-artifact@v3
+      with:
+        name: Binary
+        path: ./${{ github.repository }}.bin
+        if-no-files-found: ignore
+        retention-days: 30
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs:
+      - binary
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v3
+    
+    - name: Download app
+      uses: actions/download-artifact@v3
+      with:
+        name: Binary
+
+    - name: Semantic Release
+      run: |
+        npm i @semantic-release/commit-analyzer @semantic-release/git @semantic-release/changelog conventional-changelog-conventionalcommits
+        npx semantic-release@21
