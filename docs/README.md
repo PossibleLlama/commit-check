@@ -20,12 +20,12 @@ commit-check
 
 You can specify what prefixes for commit types you are going to follow by
 using the `-t` flag.
-This only accepts `angular` or `conventional` currently.
+This only accepts `angular` or `conventionalcommit` currently.
 Raise an issue or contribute directly if there are other types that would be
 useful, as well as links to documentation showing where the convention comes
 from.
 
 ``` bash
 commit-check -t angular
-commit-check --type conventional
+commit-check --type conventionalcommit
 ```
