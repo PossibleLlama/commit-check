@@ -15,8 +15,8 @@ var rootCmd = &cobra.Command{
 	Use:   "commit-check",
 	Short: "Verify your commits have a common format",
 	Run: func(cmd *cobra.Command, args []string) {
-		if conventionType != "angular" && conventionType != "conventional" {
-			fmt.Println("convention type must be either angular or conventional but was", conventionType)
+		if conventionType != "angular" && conventionType != "conventionalcommit" {
+			fmt.Println("convention type must be either 'angular' or 'conventionalcommit' but was", conventionType)
 			os.Exit(1)
 		}
 
@@ -53,6 +53,6 @@ func init() {
 	rootCmd.Flags().StringVarP(&conventionType,
 		"type",
 		"t",
-		"conventional",
-		"accepts either 'conventional' or 'angular'")
+		"conventionalcommit",
+		"accepts either 'angular' or 'conventionalcommit'")
 }
