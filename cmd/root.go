@@ -51,8 +51,8 @@ func Execute() {
 
 func init() {
 	rootCmd.Flags().StringVarP(&conventionType,
-		"type",
-		"t",
+		"type-list",
+		"l",
 		"conventionalcommit",
 		"accepts either 'angular' or 'conventionalcommit'")
 }
