@@ -12,22 +12,21 @@ import (
 var (
 	// Based on https://www.conventionalcommits.org/
 	// TODO allow config to choose between these lists
-	defaultConventionTypes = []string{
+	typeConventionalCommit = []string{
 		"fix",
 		"feat",
 		"BREAKING CHANGE",
 	}
-	angularConventionTypes = []string{
-		"fix",
+	// Based on https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type
+	typeAngular = []string{
 		"feat",
-		"build",
-		"chore",
-		"ci",
+		"fix",
 		"docs",
 		"style",
 		"refactor",
 		"perf",
 		"test",
+		"chore",
 		"revert",
 		"BREAKING CHANGE",
 	}
@@ -37,9 +36,9 @@ func promptType() string {
 	var prefixChoices []string
 	switch conventionType {
 	case "angular":
-		prefixChoices = angularConventionTypes
+		prefixChoices = typeAngular
 	case "conventional":
-		prefixChoices = defaultConventionTypes
+		prefixChoices = typeConventionalCommit
 	}
 
 	prefixPrompt := promptui.Select{
