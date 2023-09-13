@@ -1,0 +1,66 @@
+name: "On commit"
+
+on: push
+
+jobs:
+  binary:
+    name: Binary
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v3
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: "./go.mod"
+
+    - name: Get dependencies
+      run: go mod download
+
+    - name: Build
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/PossibleLlama/commit-check/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
+
+    - name: Store binary
+      uses: actions/upload-artifact@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        name: Binary
+        path: ./${{ github.repository }}.bin
+        if-no-files-found: ignore
+        retention-days: 30
+
+  linting:
+    name: Linting
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v3
+
+    - name: Set up Go 1.x
+      uses: actions/setup-go@v4
+      with:
+        go-version-file: "./go.mod"
+
+    - name: Check formatting
+      run: go fmt ./...
+
+    - name: Check vet
+      run: go vet ./...
+
+    - name: Check linting
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: latest
+        args: --issues-exit-code=0 --out-format checkstyle -v ./... > ./lint.out
+
+    - name: Store linting report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: Linting report
+        path: ./lint.out
+        if-no-files-found: ignore
+        retention-days: 2
