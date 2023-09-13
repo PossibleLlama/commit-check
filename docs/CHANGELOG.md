@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/PossibleLlama/commit-check/compare/v1.1.0...v1.1.1) (2023-09-13)
+
+
+### Bug Fixes
+
+* Remove unneeded variables ([5b2c74b](https://github.com/PossibleLlama/commit-check/commit/5b2c74b708965e1f9208874db50cf0c8ed33220b))
+
 # [1.1.0](https://github.com/PossibleLlama/commit-check/compare/v1.0.1...v1.1.0) (2023-09-13)
 
 
