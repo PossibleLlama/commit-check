@@ -22,18 +22,6 @@ jobs:
     - name: Build
       run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
 
-    - name: Run app
-      run: ./${{ github.repository }}.bin -v
-
-    - name: Store binary
-      uses: actions/upload-artifact@v3
-      if: github.ref == 'refs/heads/main'
-      with:
-        name: Binary
-        path: ./${{ github.repository }}.bin
-        if-no-files-found: ignore
-        retention-days: 30
-
   linting:
     name: Linting
     runs-on: ubuntu-latest
