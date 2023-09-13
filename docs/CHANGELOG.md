@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/PossibleLlama/commit-check/compare/v1.0.1...v1.1.0) (2023-09-13)
+
+
+### Features
+
+* Update type to type list ([9ad16fb](https://github.com/PossibleLlama/commit-check/commit/9ad16fbe68e4ab0ea18201ed44d12c05a2d5fd77))
+
 ## [1.0.1](https://github.com/PossibleLlama/commit-check/compare/v1.0.0...v1.0.1) (2023-09-13)
 
 
