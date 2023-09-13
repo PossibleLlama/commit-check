@@ -20,7 +20,10 @@ jobs:
       run: go mod download
 
     - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/PossibleLlama/commit-check/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
+
+    - name: Run app
+      run: ./${{ github.repository }}.bin -v
 
     - name: Store binary
       uses: actions/upload-artifact@v3
