@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/PossibleLlama/commit-check/compare/v1.1.1...v1.1.2) (2023-09-14)
+
+
+### Bug Fixes
+
+* Perform patch off fix ([d74c584](https://github.com/PossibleLlama/commit-check/commit/d74c584857aeefb6ef1396fa3be5bc2fa3bc088b))
+
 ## [1.1.1](https://github.com/PossibleLlama/commit-check/compare/v1.1.0...v1.1.1) (2023-09-13)
 
 
