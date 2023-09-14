@@ -12,13 +12,11 @@ jobs:
     name: Binary
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-latest
           - macos-latest
-        arch:
-          - amd64
-          - arm64
     steps:
 
     - name: Check out code into the Go module directory
@@ -33,15 +31,14 @@ jobs:
       run: go mod download
 
     - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.os }}-${{ matrix.arch }}.bin" ./main.go
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.os }}.bin" ./main.go
       env:
         GOOS: ${{ matrix.os }}
-        GOARCH: ${{ matrix.arch }}
 
     - name: Store binaries
       uses: actions/upload-artifact@v3
       with:
-        path: ./${{ github.repository }}-${{ matrix.os }}-${{ matrix.arch }}.bin
+        path: ./${{ github.repository }}-${{ matrix.os }}.bin
         if-no-files-found: ignore
         retention-days: 30
 
