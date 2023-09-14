@@ -11,6 +11,16 @@ jobs:
   binary:
     name: Binary
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        goos:
+          - linux
+          - darwin
+          - windows
+        goarch:
+          - amd64
+          - arm64
     steps:
 
     - name: Check out code into the Go module directory
@@ -25,13 +35,19 @@ jobs:
       run: go mod download
 
     - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin" ./main.go
+      env:
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
 
-    - name: Store binary
+    - name: Rename on windows
+      if: matrix.goos == 'windows'
+      run: mv ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+
+    - name: Store binaries
       uses: actions/upload-artifact@v3
       with:
-        name: Binary
-        path: ./${{ github.repository }}.bin
+        path: ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.*
         if-no-files-found: ignore
         retention-days: 30
 
@@ -57,7 +73,10 @@ jobs:
     - name: Download app
       uses: actions/download-artifact@v3
       with:
-        name: Binary
+        path: .
+
+    - name: Move binaries
+      run: mv ./artifact/* .
 
     - name: Semantic Release
       run: |
