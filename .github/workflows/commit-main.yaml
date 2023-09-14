@@ -10,7 +10,15 @@ permissions: read-all
 jobs:
   binary:
     name: Binary
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+        arch:
+          - amd64
+          - arm64
     steps:
 
     - name: Check out code into the Go module directory
@@ -25,13 +33,15 @@ jobs:
       run: go mod download
 
     - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.os }}-${{ matrix.arch }}.bin" ./main.go
+      env:
+        GOOS: ${{ matrix.os }}
+        GOARCH: ${{ matrix.arch }}
 
-    - name: Store binary
+    - name: Store binaries
       uses: actions/upload-artifact@v3
       with:
-        name: Binary
-        path: ./${{ github.repository }}.bin
+        path: ./${{ github.repository }}-${{ matrix.os }}-${{ matrix.arch }}.bin
         if-no-files-found: ignore
         retention-days: 30
 
@@ -57,7 +67,7 @@ jobs:
     - name: Download app
       uses: actions/download-artifact@v3
       with:
-        name: Binary
+        path: .
 
     - name: Semantic Release
       run: |
