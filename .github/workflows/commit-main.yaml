@@ -40,10 +40,14 @@ jobs:
         GOOS: ${{ matrix.goos }}
         GOARCH: ${{ matrix.goarch }}
 
+    - name: Rename on windows
+      if: matrix.goos == 'windows'
+      run: mv ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.exe
+
     - name: Store binaries
       uses: actions/upload-artifact@v3
       with:
-        path: ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin
+        path: ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.*
         if-no-files-found: ignore
         retention-days: 30
 
@@ -70,6 +74,9 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         path: .
+
+    - name: Move binaries
+      run: mv ./artifact/* .
 
     - name: Semantic Release
       run: |
