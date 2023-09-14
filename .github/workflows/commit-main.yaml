@@ -10,13 +10,17 @@ permissions: read-all
 jobs:
   binary:
     name: Binary
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
+        goos:
+          - linux
+          - darwin
+          - windows
+        goarch:
+          - amd64
+          - arm64
     steps:
 
     - name: Check out code into the Go module directory
@@ -31,14 +35,15 @@ jobs:
       run: go mod download
 
     - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.os }}.bin" ./main.go
+      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin" ./main.go
       env:
-        GOOS: ${{ matrix.os }}
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
 
     - name: Store binaries
       uses: actions/upload-artifact@v3
       with:
-        path: ./${{ github.repository }}-${{ matrix.os }}.bin
+        path: ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin
         if-no-files-found: ignore
         retention-days: 30
 

@@ -7,13 +7,17 @@ permissions: read-all
 jobs:
   binary:
     name: Binary
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
+        goos:
+          - linux
+          - darwin
+          - windows
+        goarch:
+          - amd64
+          - arm64
     steps:
 
     - name: Check out code into the Go module directory
@@ -30,7 +34,8 @@ jobs:
     - name: Build
       run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'github.com/${{ github.repository }}/cmd.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./main.go
       env:
-        GOOS: ${{ matrix.os }}
+        GOOS: ${{ matrix.goos }}
+        GOARCH: ${{ matrix.goarch }}
 
   linting:
     name: Linting
