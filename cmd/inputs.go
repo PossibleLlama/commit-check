@@ -9,36 +9,13 @@ import (
 	"github.com/manifoldco/promptui"
 )
 
-var (
-	// Based on https://www.conventionalcommits.org/
-	// TODO allow config to choose between these lists
-	typeConventionalCommit = []string{
-		"fix",
-		"feat",
-		"BREAKING CHANGE",
-	}
-	// Based on https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type
-	typeAngular = []string{
-		"feat",
-		"fix",
-		"docs",
-		"style",
-		"refactor",
-		"perf",
-		"test",
-		"chore",
-		"revert",
-		"BREAKING CHANGE",
-	}
-)
-
 func promptType() string {
 	var prefixChoices []string
 	switch conventionType {
 	case "angular":
-		prefixChoices = typeAngular
+		prefixChoices = model.TypeAngular
 	case "conventionalcommit":
-		prefixChoices = typeConventionalCommit
+		prefixChoices = model.TypeConventionalCommit
 	}
 
 	prefixPrompt := promptui.Select{
