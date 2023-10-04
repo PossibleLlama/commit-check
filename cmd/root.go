@@ -22,11 +22,11 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		var commit = model.Commit{}
-
-		commit.Type = promptType()
-		commit.Scope = promptScope()
-		commit.Description = promptMessage()
+		var commit = model.Commit{
+			Type:        promptType(),
+			Scope:       promptScope(),
+			Description: promptMessage(),
+		}
 
 		commitArgs := []string{"commit", "-m", commit.String()}
 		runOsCmd := exec.Command("git", commitArgs...)
