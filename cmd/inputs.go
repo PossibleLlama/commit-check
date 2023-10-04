@@ -7,50 +7,29 @@ import (
 	"strings"
 
 	"github.com/manifoldco/promptui"
+
+	model "github.com/PossibleLlama/commit-check/model"
 )
 
-var (
-	// Based on https://www.conventionalcommits.org/
-	// TODO allow config to choose between these lists
-	typeConventionalCommit = []string{
-		"fix",
-		"feat",
-		"BREAKING CHANGE",
-	}
-	// Based on https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type
-	typeAngular = []string{
-		"feat",
-		"fix",
-		"docs",
-		"style",
-		"refactor",
-		"perf",
-		"test",
-		"chore",
-		"revert",
-		"BREAKING CHANGE",
-	}
-)
-
-func promptType() string {
-	var prefixChoices []string
+func promptType() model.CommitType {
+	var prefixChoices []model.CommitType
 	switch conventionType {
 	case "angular":
-		prefixChoices = typeAngular
+		prefixChoices = model.TypeAngular
 	case "conventionalcommit":
-		prefixChoices = typeConventionalCommit
+		prefixChoices = model.TypeConventionalCommit
 	}
 
 	prefixPrompt := promptui.Select{
 		Label: "Select type of change",
 		Items: prefixChoices,
 	}
-	_, prefixAsStr, prefixErr := prefixPrompt.Run()
+	selectedPosition, _, prefixErr := prefixPrompt.Run()
 	if prefixErr != nil {
 		fmt.Println("failed to select item from list", prefixErr)
 		os.Exit(1)
 	}
-	return strings.TrimSpace(prefixAsStr)
+	return prefixChoices[selectedPosition]
 }
 
 func promptScope() string {
