@@ -6,6 +6,8 @@ import (
 	"os/exec"
 
 	"github.com/spf13/cobra"
+
+	model "github.com/PossibleLlama/commit-check/model"
 )
 
 var conventionType string
@@ -20,16 +22,13 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		prefix := promptType()
-		scope := promptScope()
-		message := promptMessage()
+		var commit = model.Commit{}
 
-		if scope != "" {
-			prefix = prefix + "(" + scope + "): "
-		} else {
-			prefix = prefix + ": "
-		}
-		commitArgs := []string{"commit", "-m", prefix + message}
+		commit.Type = promptType()
+		commit.Scope = promptScope()
+		commit.Description = promptMessage()
+
+		commitArgs := []string{"commit", "-m", commit.String()}
 		runOsCmd := exec.Command("git", commitArgs...)
 
 		osCmdOutput, runErr := runOsCmd.CombinedOutput()

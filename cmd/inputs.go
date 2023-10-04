@@ -7,10 +7,12 @@ import (
 	"strings"
 
 	"github.com/manifoldco/promptui"
+
+	model "github.com/PossibleLlama/commit-check/model"
 )
 
-func promptType() string {
-	var prefixChoices []string
+func promptType() model.CommitType {
+	var prefixChoices []model.CommitType
 	switch conventionType {
 	case "angular":
 		prefixChoices = model.TypeAngular
@@ -22,12 +24,12 @@ func promptType() string {
 		Label: "Select type of change",
 		Items: prefixChoices,
 	}
-	_, prefixAsStr, prefixErr := prefixPrompt.Run()
+	selectedPosition, _, prefixErr := prefixPrompt.Run()
 	if prefixErr != nil {
 		fmt.Println("failed to select item from list", prefixErr)
 		os.Exit(1)
 	}
-	return strings.TrimSpace(prefixAsStr)
+	return prefixChoices[selectedPosition]
 }
 
 func promptScope() string {
