@@ -4,10 +4,13 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
+	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
 
 	model "github.com/PossibleLlama/commit-check/model"
+	"github.com/PossibleLlama/commit-check/view"
 )
 
 var conventionType string
@@ -21,14 +24,28 @@ var rootCmd = &cobra.Command{
 			fmt.Println("convention type must be either 'angular' or 'conventionalcommit' but was", conventionType)
 			os.Exit(1)
 		}
-
-		var commit = model.Commit{
-			Type:        promptType(),
-			Scope:       promptScope(),
-			Description: promptMessage(),
+		var prefixChoices []model.CommitType
+		switch conventionType {
+		case "angular":
+			prefixChoices = model.TypeAngular
+		case "conventionalcommit":
+			prefixChoices = model.TypeConventionalCommit
 		}
 
-		commitArgs := []string{"commit", "-m", commit.String()}
+		var commit = model.Commit{}
+		viewModel := view.InitCommitModel(prefixChoices, &commit)
+		tea.NewProgram(viewModel).Run()
+
+		if commit.String() == "" {
+			os.Exit(1)
+		}
+
+		cString := strings.Split(commit.String(), "\n")
+		commitArgs := []string{"commit"}
+		for _, line := range cString {
+			commitArgs = append(commitArgs, "-m", "\""+line+"\"")
+		}
+
 		runOsCmd := exec.Command("git", commitArgs...)
 
 		osCmdOutput, runErr := runOsCmd.CombinedOutput()
