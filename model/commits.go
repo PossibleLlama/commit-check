@@ -41,13 +41,21 @@ type Commit struct {
 }
 
 func (c Commit) String() string {
-	scope := ""
-	if c.Scope != "" {
-		scope = "(" + c.Scope + ")"
+	if c.Description == "" {
+		return ""
 	}
-	s := string(c.Type) + scope + ": " + c.Description
+	prefix := ""
+	if c.Type != "" {
+		prefix += string(c.Type)
+	} else {
+		prefix += string(CommitTypeFix)
+	}
+	if c.Scope != "" {
+		prefix += "(" + c.Scope + ")"
+	}
+	s := prefix + ": " + c.Description
 	if c.IsBreakingChange {
-		s += "\n\nBREAKING CHANGE"
+		s += "\nBREAKING CHANGE"
 	}
 	return s
 }
