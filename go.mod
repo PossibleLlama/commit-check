@@ -1,10 +1,11 @@
 module github.com/PossibleLlama/commit-check
 
-go 1.21.0
+go 1.21.4
 
 require (
-	github.com/manifoldco/promptui v0.9.0
-	github.com/spf13/cobra v1.7.0
+	github.com/charmbracelet/bubbles v0.16.1
+	github.com/charmbracelet/bubbletea v0.24.2
+	github.com/charmbracelet/lipgloss v0.9.1
 	github.com/stretchr/testify v1.8.4
 )
 
