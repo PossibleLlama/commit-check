@@ -50,6 +50,7 @@ var rootCmd = &cobra.Command{
 
 		osCmdOutput, runErr := runOsCmd.CombinedOutput()
 		if runErr != nil {
+			fmt.Println(runOsCmd.String())
 			fmt.Println("failed to commit with error:", string(osCmdOutput))
 			os.Exit(1)
 		}

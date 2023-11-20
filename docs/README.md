@@ -9,6 +9,8 @@ It also doesn't require others on the team to use the standardized format,
 although you will get more out of other tooling in the space if everyone does
 use the same commit structure.
 
+This requires `git` to be installed on the machine.
+
 ## Usage
 
 The application will prompt you for inputs at each point.
