@@ -3,7 +3,6 @@ module github.com/PossibleLlama/commit-check
 go 1.21.4
 
 require (
-	github.com/charmbracelet/bubbles v0.16.1
 	github.com/charmbracelet/bubbletea v0.24.2
 	github.com/stretchr/testify v1.8.4
 )
