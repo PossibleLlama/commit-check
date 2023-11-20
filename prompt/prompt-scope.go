@@ -8,17 +8,19 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+type ScopeResponse string
+
 func (p PromptCommit) CheckJira() tea.Msg {
 	c := &http.Client{
 		Timeout: 10 * time.Second,
 	}
 	res, err := c.Get("https://google.com")
 	if err != nil {
-		return err
+		return nil
 	}
 	defer res.Body.Close()
 
-	return res.StatusCode
+	return ScopeResponse(res.Status)
 }
 
 func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {

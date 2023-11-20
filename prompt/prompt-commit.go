@@ -45,8 +45,9 @@ func NewPromptCommit(typeNameOptions []model.CommitType, cmt *model.Commit) *Pro
 }
 
 func (p PromptCommit) Init() tea.Cmd {
-	p.CheckJira()
-	return nil
+	return tea.Batch(
+		p.CheckJira,
+	)
 }
 
 func (p PromptCommit) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -70,6 +71,8 @@ func (p PromptCommit) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return p.UpdateBreakingChange(msg)
 			}
 		}
+	case ScopeResponse:
+		p.scopeOptions = append(p.scopeOptions, string(msg))
 	}
 	return p, nil
 }
