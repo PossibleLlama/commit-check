@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/PossibleLlama/commit-check/model"
@@ -10,12 +11,34 @@ import (
 )
 
 func main() {
-	commit := &model.Commit{}
+	f := setupLoggingToFile()
+	defer f.Close()
 
-	p := tea.NewProgram(prompt.NewPromptType(model.TypeAngular, commit))
+	commit := &model.Commit{}
+	var p *tea.Program
+
+	p = tea.NewProgram(prompt.NewPromptType(model.TypeAngular, commit), tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("An unexpected error:", err)
 		os.Exit(1)
 	}
-	fmt.Println("Finished commit as: ", commit.String())
+	p = tea.NewProgram(prompt.NewPromptScope("https://google.com", "", commit), tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		fmt.Println("An unexpected error:", err)
+		os.Exit(1)
+	}
+	p = tea.NewProgram(prompt.NewPromptDescription(commit), tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		fmt.Println("An unexpected error:", err)
+		os.Exit(1)
+	}
+	log.Output(1, commit.String())
+}
+
+func setupLoggingToFile() *os.File {
+	f, err := tea.LogToFile("debug.log", "commit-check")
+	if err != nil {
+		log.Fatal("Error creating log file:", err)
+	}
+	return f
 }
