@@ -5,57 +5,26 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/PossibleLlama/commit-check/model"
-
-	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type PromptScope struct {
-	cursor       int
-	scopeOptions []string
-	input        textinput.Model
-
-	jiraUrl    string
-	clickupUrl string
-
-	width  int
-	height int
-
-	commit *model.Commit
-}
-
-func NewPromptScope(jiraUrl, clickupUrl string, cmt *model.Commit) *PromptScope {
-	ti := textinput.New()
-	ti.Placeholder = "Scope"
-	ti.Blur()
-
-	return &PromptScope{
-		cursor:       0,
-		scopeOptions: []string{"None", "Other"},
-		input:        ti,
-
-		jiraUrl:    jiraUrl,
-		clickupUrl: clickupUrl,
-
-		commit: cmt,
+func (p PromptCommit) CheckJira() tea.Msg {
+	c := &http.Client{
+		Timeout: 10 * time.Second,
 	}
+	res, err := c.Get("https://google.com")
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	return res.StatusCode
 }
 
-func (p PromptScope) Init() tea.Cmd {
-	// Go to JIRA/Clickup
-	return p.checkJira
-}
-
-func (p PromptScope) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
-	case tea.WindowSizeMsg:
-		p.width = msg.Width
-		p.height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
-		case tea.KeyEsc.String(), tea.KeyCtrlC.String():
-			return p, tea.Quit
 		case "up":
 			if p.cursor > 0 {
 				p.cursor--
@@ -66,24 +35,33 @@ func (p PromptScope) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		case "enter":
 			if p.scopeOptions[p.cursor] == "Other" {
-				if p.input.Focused() {
-					p.input.Blur()
-					p.commit.Scope = p.input.Value()
-					return p, tea.Quit
+				if p.inputSingleLine.Focused() {
+					p.inputSingleLine.Blur()
+					p.commit.Scope = p.inputSingleLine.Value()
+					p.page++
+					p.cursor = 0
+					p.inputMultiLine.Focus()
+					return p, nil
 				} else {
-					p.input.Focus()
+					p.inputSingleLine.Focus()
+					p.inputSingleLine.Placeholder = "Scope"
 				}
 			} else if p.scopeOptions[p.cursor] != "None" {
 				p.commit.Scope = p.scopeOptions[p.cursor]
-				return p, tea.Quit
+				p.page++
+				p.cursor = 0
+				p.inputMultiLine.Focus()
+				return p, nil
 			} else {
-				return p, tea.Quit
+				p.page++
+				p.cursor = 0
+				p.inputMultiLine.Focus()
+				return p, nil
 			}
 		default:
-			if p.input.Focused() {
+			if p.inputSingleLine.Focused() {
 				var cmd tea.Cmd
-				p.input, cmd = p.input.Update(msg)
-				p.commit.Scope = p.input.Value()
+				p.inputSingleLine, cmd = p.inputSingleLine.Update(msg)
 				return p, cmd
 			}
 		}
@@ -93,14 +71,13 @@ func (p PromptScope) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return p, nil
 }
 
-func (p PromptScope) View() string {
-	if p.width == 0 || p.height == 0 {
-		return "loading..."
-	}
-	if p.input.Focused() {
-		return p.input.View()
+func (p PromptCommit) ViewScope() string {
+	s := ""
+	if p.inputSingleLine.Focused() {
+		s = "Scope of the change:\n"
+		s += p.inputSingleLine.View()
 	} else {
-		s := "Select the scope of the change:\n"
+		s = "Select the scope of the change:\n"
 		for i, scope := range p.scopeOptions {
 			if p.cursor == i {
 				s += "> "
@@ -109,19 +86,6 @@ func (p PromptScope) View() string {
 			}
 			s += scope + "\n"
 		}
-		return s
 	}
-}
-
-func (p PromptScope) checkJira() tea.Msg {
-	c := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-	res, err := c.Get(p.jiraUrl)
-	if err != nil {
-		return err
-	}
-	defer res.Body.Close()
-
-	return res.StatusCode
+	return s
 }
