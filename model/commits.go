@@ -1,5 +1,7 @@
 package model
 
+import "strings"
+
 type CommitType string
 
 const (
@@ -45,7 +47,7 @@ func (c Commit) String() string {
 	if c.Scope != "" {
 		scope = "(" + c.Scope + ")"
 	}
-	s := string(c.Type) + scope + ": " + c.Description
+	s := string(c.Type) + scope + ": " + strings.TrimSpace(c.Description)
 	if c.IsBreakingChange {
 		s += "\n\nBREAKING CHANGE"
 	}
