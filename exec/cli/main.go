@@ -1,9 +1,23 @@
 package main
 
 import (
-	"github.com/PossibleLlama/commit-check/cmd"
+	"fmt"
+	"os"
+
+	"github.com/PossibleLlama/commit-check/prompt"
+	tea "github.com/charmbracelet/bubbletea"
 )
 
+var typeNameOptions = []string{
+	"feat",
+	"fix",
+}
+
 func main() {
-	cmd.Execute()
+
+	p := tea.NewProgram(prompt.NewPromptType(typeNameOptions))
+	if _, err := p.Run(); err != nil {
+		fmt.Println("An unexpected error:", err)
+		os.Exit(1)
+	}
 }
