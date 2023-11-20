@@ -1,20 +1,23 @@
 package prompt
 
 import (
+	"github.com/PossibleLlama/commit-check/model"
+
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type PromptType struct {
 	cursor          int
-	typeNameOptions []string
-	typeName        string
+	typeNameOptions []model.CommitType
+
+	commit *model.Commit
 }
 
-func NewPromptType(typeNameOptions []string) *PromptType {
+func NewPromptType(typeNameOptions []model.CommitType, cmt *model.Commit) *PromptType {
 	return &PromptType{
 		cursor:          0,
 		typeNameOptions: typeNameOptions,
-		typeName:        "",
+		commit:          cmt,
 	}
 }
 
@@ -37,7 +40,7 @@ func (p PromptType) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				p.cursor++
 			}
 		case "enter":
-			p.typeName = p.typeNameOptions[p.cursor]
+			p.commit.Type = p.typeNameOptions[p.cursor]
 			return p, tea.Quit
 		}
 	}
@@ -52,7 +55,7 @@ func (p PromptType) View() string {
 		} else {
 			s += "  "
 		}
-		s += typeName + "\n"
+		s += string(typeName) + "\n"
 	}
 	return s
 }
