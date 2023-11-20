@@ -7,12 +7,14 @@ import (
 
 	"github.com/PossibleLlama/commit-check/model"
 
+	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
 type PromptScope struct {
 	cursor       int
 	scopeOptions []string
+	input        textinput.Model
 
 	jiraUrl    string
 	clickupUrl string
@@ -24,9 +26,14 @@ type PromptScope struct {
 }
 
 func NewPromptScope(jiraUrl, clickupUrl string, cmt *model.Commit) *PromptScope {
+	ti := textinput.New()
+	ti.Placeholder = "Scope"
+	ti.Blur()
+
 	return &PromptScope{
 		cursor:       0,
-		scopeOptions: []string{"None"},
+		scopeOptions: []string{"None", "Other"},
+		input:        ti,
 
 		jiraUrl:    jiraUrl,
 		clickupUrl: clickupUrl,
@@ -47,7 +54,7 @@ func (p PromptScope) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		p.height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "q", tea.KeyEsc.String(), tea.KeyCtrlC.String():
+		case tea.KeyEsc.String(), tea.KeyCtrlC.String():
 			return p, tea.Quit
 		case "up":
 			if p.cursor > 0 {
@@ -58,10 +65,27 @@ func (p PromptScope) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				p.cursor++
 			}
 		case "enter":
-			if p.scopeOptions[p.cursor] != "None" {
+			if p.scopeOptions[p.cursor] == "Other" {
+				if p.input.Focused() {
+					p.input.Blur()
+					p.commit.Scope = p.input.Value()
+					return p, tea.Quit
+				} else {
+					p.input.Focus()
+				}
+			} else if p.scopeOptions[p.cursor] != "None" {
 				p.commit.Scope = p.scopeOptions[p.cursor]
+				return p, tea.Quit
+			} else {
+				return p, tea.Quit
 			}
-			return p, tea.Quit
+		default:
+			if p.input.Focused() {
+				var cmd tea.Cmd
+				p.input, cmd = p.input.Update(msg)
+				p.commit.Scope = p.input.Value()
+				return p, cmd
+			}
 		}
 	case int:
 		p.scopeOptions = append(p.scopeOptions, fmt.Sprint(msg))
@@ -73,16 +97,20 @@ func (p PromptScope) View() string {
 	if p.width == 0 || p.height == 0 {
 		return "loading..."
 	}
-	s := "Select the scope of the change:\n"
-	for i, scope := range p.scopeOptions {
-		if p.cursor == i {
-			s += "> "
-		} else {
-			s += "  "
+	if p.input.Focused() {
+		return p.input.View()
+	} else {
+		s := "Select the scope of the change:\n"
+		for i, scope := range p.scopeOptions {
+			if p.cursor == i {
+				s += "> "
+			} else {
+				s += "  "
+			}
+			s += scope + "\n"
 		}
-		s += scope + "\n"
+		return s
 	}
-	return s
 }
 
 func (p PromptScope) checkJira() tea.Msg {
