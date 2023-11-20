@@ -32,6 +32,11 @@ func main() {
 		fmt.Println("An unexpected error:", err)
 		os.Exit(1)
 	}
+	p = tea.NewProgram(prompt.NewPromptBreakingChange(commit), tea.WithAltScreen())
+	if _, err := p.Run(); err != nil {
+		fmt.Println("An unexpected error:", err)
+		os.Exit(1)
+	}
 	log.Output(1, commit.String())
 }
 
