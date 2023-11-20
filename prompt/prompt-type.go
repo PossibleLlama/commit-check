@@ -35,7 +35,7 @@ func (p PromptType) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		p.height = msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "q", tea.KeyEsc.String(), tea.KeyCtrlC.String():
+		case tea.KeyEsc.String(), tea.KeyCtrlC.String():
 			return p, tea.Quit
 		case "up":
 			if p.cursor > 0 {
