@@ -16,7 +16,6 @@ func (p PromptCommit) UpdateDescription(msg tea.Msg) (tea.Model, tea.Cmd) {
 			if strings.HasSuffix(p.inputMultiLine.Value(), "\n") {
 				p.inputMultiLine.Blur()
 				p.page++
-				p.cursor = 0
 			}
 			p.inputMultiLine.SetValue(p.inputMultiLine.Value() + "\n")
 			p.commit.Description = p.inputMultiLine.Value()

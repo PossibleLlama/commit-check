@@ -1,14 +1,21 @@
 package prompt
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type ScopeResponse string
+type ScopeItem struct {
+	title       string
+	description string
+}
+
+func (s ScopeItem) Title() string       { return s.title }
+func (s ScopeItem) Description() string { return s.description }
+func (s ScopeItem) FilterValue() string { return s.title }
 
 func (p PromptCommit) CheckJira() tea.Msg {
 	c := &http.Client{
@@ -20,74 +27,69 @@ func (p PromptCommit) CheckJira() tea.Msg {
 	}
 	defer res.Body.Close()
 
-	return ScopeResponse(res.Status)
+	return ScopeItem{title: res.Status, description: "Jira ticket"}
+}
+
+func SetupListOfScopes() list.Model {
+	scopeItems := []list.Item{
+		ScopeItem{title: "None", description: "No scope"},
+		ScopeItem{title: "Other", description: "Manual input"},
+	}
+	scopeList := list.New(scopeItems, list.NewDefaultDelegate(), 0, 0)
+	scopeList.Title = "Scope of change"
+	return scopeList
 }
 
 func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "up":
-			if p.cursor > 0 {
-				p.cursor--
-			}
-		case "down":
-			if p.cursor < len(p.scopeOptions)-1 {
-				p.cursor++
-			}
 		case "enter":
-			if p.scopeOptions[p.cursor] == "Other" {
-				if p.inputSingleLine.Focused() {
+			selectedItem := p.scopeOptions.SelectedItem()
+			selectedScope := selectedItem.(ScopeItem)
+			switch selectedScope.title {
+			case "None":
+				p.page++
+				p.inputMultiLine.Focus()
+				return p, nil
+			case "Other":
+				if !p.inputSingleLine.Focused() {
+					// First time pressing enter, so we need to focus the input
+					p.inputSingleLine.Focus()
+					p.inputSingleLine.Placeholder = "Scope"
+				} else {
+					// Second time pressing enter goes to the next page
 					p.inputSingleLine.Blur()
 					p.commit.Scope = p.inputSingleLine.Value()
 					p.page++
-					p.cursor = 0
 					p.inputMultiLine.Focus()
 					return p, nil
-				} else {
-					p.inputSingleLine.Focus()
-					p.inputSingleLine.Placeholder = "Scope"
 				}
-			} else if p.scopeOptions[p.cursor] != "None" {
-				p.commit.Scope = p.scopeOptions[p.cursor]
+			default:
+				p.commit.Scope = selectedScope.title
 				p.page++
-				p.cursor = 0
-				p.inputMultiLine.Focus()
-				return p, nil
-			} else {
-				p.page++
-				p.cursor = 0
 				p.inputMultiLine.Focus()
 				return p, nil
 			}
 		default:
 			if p.inputSingleLine.Focused() {
-				var cmd tea.Cmd
 				p.inputSingleLine, cmd = p.inputSingleLine.Update(msg)
-				return p, cmd
+			} else {
+				p.scopeOptions, cmd = p.scopeOptions.Update(msg)
 			}
 		}
-	case int:
-		p.scopeOptions = append(p.scopeOptions, fmt.Sprint(msg))
 	}
-	return p, nil
+	return p, cmd
 }
 
 func (p PromptCommit) ViewScope() string {
 	s := ""
 	if p.inputSingleLine.Focused() {
 		s = "Scope of the change:\n"
-		s += p.inputSingleLine.View()
+		s += docStyle.Render(p.inputSingleLine.View())
 	} else {
-		s = "Select the scope of the change:\n"
-		for i, scope := range p.scopeOptions {
-			if p.cursor == i {
-				s += "> "
-			} else {
-				s += "  "
-			}
-			s += scope + "\n"
-		}
+		s += docStyle.Render(p.scopeOptions.View())
 	}
 	return s
 }

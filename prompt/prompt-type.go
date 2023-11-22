@@ -1,40 +1,38 @@
 package prompt
 
 import (
+	"fmt"
+
+	"github.com/PossibleLlama/commit-check/model"
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+func SetupListOfTypes(typeNameOptions []model.CommitType) list.Model {
+	typeNameItems := []list.Item{}
+	for _, t := range typeNameOptions {
+		typeNameItems = append(typeNameItems, LItem(t.String()))
+	}
+	typeNameList := list.New(typeNameItems, LItemDelegate{}, 0, 0)
+	typeNameList.Title = "Type of change"
+	return typeNameList
+}
+
 func (p PromptCommit) UpdateType(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "up":
-			if p.cursor > 0 {
-				p.cursor--
-			}
-		case "down":
-			if p.cursor < len(p.typeNameOptions)-1 {
-				p.cursor++
-			}
-		case "enter":
-			p.commit.Type = p.typeNameOptions[p.cursor]
+		case tea.KeyEnter.String():
+			p.commit.Type = model.CommitType(fmt.Sprint(p.typeNameOptions.SelectedItem()))
 			p.page++
-			p.cursor = 0
-			return p, nil
+		default:
+			p.typeNameOptions, cmd = p.typeNameOptions.Update(msg)
 		}
 	}
-	return p, nil
+	return p, cmd
 }
 
 func (p PromptCommit) ViewType() string {
-	s := "Select the type of change you're committing:\n"
-	for i, typeName := range p.typeNameOptions {
-		if p.cursor == i {
-			s += "> "
-		} else {
-			s += "  "
-		}
-		s += string(typeName) + "\n"
-	}
-	return s
+	return docStyle.Render(p.typeNameOptions.View())
 }
