@@ -1,38 +1,39 @@
 package prompt
 
 import (
+	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
+func SetupListOfBreakingChanges() list.Model {
+	LItems := []list.Item{
+		LItem("No"),
+		LItem("Yes"),
+	}
+	breakingList := list.New(LItems, LItemDelegate{}, 0, 0)
+	breakingList.Title = "Breaking change"
+	breakingList.SetFilteringEnabled(false)
+	return breakingList
+}
+
 func (p PromptCommit) UpdateBreakingChange(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "up":
-			if p.cursor > 0 {
-				p.cursor--
+		case tea.KeyEnter.String():
+			i, ok := p.breakingOptions.SelectedItem().(LItem)
+			if ok {
+				p.commit.IsBreakingChange = string(i) == "Yes"
 			}
-		case "down":
-			if p.cursor < len(p.breakingOptions)-1 {
-				p.cursor++
-			}
-		case "enter":
-			p.commit.IsBreakingChange = p.breakingOptions[p.cursor] == "Yes"
 			return p, tea.Quit
+		default:
+			p.breakingOptions, cmd = p.breakingOptions.Update(msg)
 		}
 	}
-	return p, nil
+	return p, cmd
 }
 
 func (p PromptCommit) ViewBreakingChange() string {
-	s := "Is the commit a breaking change:\n"
-	for i, option := range p.breakingOptions {
-		if p.cursor == i {
-			s += "> "
-		} else {
-			s += "  "
-		}
-		s += option + "\n"
-	}
-	return s
+	return docStyle.Render(p.breakingOptions.View())
 }

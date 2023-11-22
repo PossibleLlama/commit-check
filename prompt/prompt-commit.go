@@ -3,18 +3,21 @@ package prompt
 import (
 	"github.com/PossibleLlama/commit-check/model"
 
+	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/textarea"
 	"github.com/charmbracelet/bubbles/textinput"
 	tea "github.com/charmbracelet/bubbletea"
+	"github.com/charmbracelet/lipgloss"
 )
 
-type PromptCommit struct {
-	cursor int
-	page   int
+var docStyle = lipgloss.NewStyle().Margin(0, 2)
 
-	typeNameOptions []model.CommitType
-	scopeOptions    []string
-	breakingOptions []string
+type PromptCommit struct {
+	page int
+
+	typeNameOptions list.Model
+	scopeOptions    list.Model
+	breakingOptions list.Model
 
 	inputSingleLine textinput.Model
 	inputMultiLine  textarea.Model
@@ -27,12 +30,11 @@ type PromptCommit struct {
 
 func NewPromptCommit(typeNameOptions []model.CommitType, cmt *model.Commit) *PromptCommit {
 	return &PromptCommit{
-		cursor: 0,
-		page:   0,
+		page: 0,
 
-		typeNameOptions: typeNameOptions,
-		scopeOptions:    []string{"None", "Other"},
-		breakingOptions: []string{"No", "Yes"},
+		typeNameOptions: SetupListOfTypes(typeNameOptions),
+		scopeOptions:    SetupListOfScopes(),
+		breakingOptions: SetupListOfBreakingChanges(),
 
 		inputSingleLine: textinput.New(),
 		inputMultiLine:  textarea.New(),
@@ -53,8 +55,22 @@ func (p PromptCommit) Init() tea.Cmd {
 func (p PromptCommit) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-		p.width = msg.Width
-		p.height = msg.Height
+		w, h := docStyle.GetFrameSize()
+		p.width = msg.Width - w
+		p.height = msg.Height - h
+
+		p.typeNameOptions.SetWidth(p.width)
+		p.typeNameOptions.SetHeight(p.height - 2)
+
+		p.scopeOptions.SetWidth(p.width)
+		p.scopeOptions.SetHeight(p.height - 2)
+
+		p.breakingOptions.SetWidth(p.width)
+		p.breakingOptions.SetHeight(p.height - 2)
+
+		p.inputMultiLine.SetWidth(p.width)
+		p.inputMultiLine.SetHeight(p.height - 2)
+
 	case tea.KeyMsg:
 		switch msg.String() {
 		case tea.KeyEsc.String(), tea.KeyCtrlC.String():
@@ -71,8 +87,9 @@ func (p PromptCommit) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return p.UpdateBreakingChange(msg)
 			}
 		}
-	case ScopeResponse:
-		p.scopeOptions = append(p.scopeOptions, string(msg))
+	case ScopeItem:
+		cmd := p.scopeOptions.InsertItem(0, msg)
+		return p, cmd
 	}
 	return p, nil
 }

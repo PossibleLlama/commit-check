@@ -4,12 +4,13 @@ go 1.21.4
 
 require (
 	github.com/charmbracelet/bubbletea v0.24.2
+	github.com/charmbracelet/lipgloss v0.7.1
 	github.com/stretchr/testify v1.8.4
 )
 
 require (
 	github.com/atotto/clipboard v0.1.4 // indirect
-	github.com/charmbracelet/lipgloss v0.7.1 // indirect
+	github.com/sahilm/fuzzy v0.1.0 // indirect
 )
 
 require (

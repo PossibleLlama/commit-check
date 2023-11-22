@@ -4,6 +4,10 @@ import "strings"
 
 type CommitType string
 
+func (c CommitType) String() string {
+	return string(c)
+}
+
 const (
 	CommitTypeFix      CommitType = "fix"
 	CommitTypeFeat     CommitType = "feat"
