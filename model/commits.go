@@ -57,3 +57,7 @@ func (c Commit) String() string {
 	}
 	return s
 }
+
+func (c Commit) IsValid() bool {
+	return c.Type != "" && len(strings.TrimSpace(c.Description)) > 3
+}
