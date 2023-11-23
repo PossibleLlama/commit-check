@@ -37,7 +37,7 @@ jobs:
 
       - name: Setup demo repository
         run: |
-          echo -e "Hide\nType \"cd ../demo\"\nEnter\nShow\n$(cat $PWD/docs/basic.tape)" > $PWD/docs/basic.tape
+          echo -e "Hide\nType \"cd ../demo && clear\"\nEnter\nShow\n$(cat $PWD/docs/basic.tape)" > $PWD/docs/basic.tape
           cat docs/basic.tape
           mkdir ../demo
           cd ../demo
