@@ -48,7 +48,7 @@ func NewPromptCommit(typeNameOptions []model.CommitType, cmt *model.Commit) *Pro
 
 func (p PromptCommit) Init() tea.Cmd {
 	return tea.Batch(
-		p.CheckJira,
+	// p.CheckJira,
 	)
 }
 
