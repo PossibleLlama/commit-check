@@ -28,12 +28,22 @@ jobs:
   
       - name: Get dependencies
         run: go mod download
-  
+
       - name: Install binary
         run: |
           APP_VERSION=$(git rev-list -1 HEAD)
           go build -ldflags="-w -s -X 'main.VERSION=$APP_VERSION'" -o "./commit-check" ./exec/cli/main.go
           mv ./commit-check /usr/local/bin/commit-check
+
+      - name: Setup demo repository
+        run: |
+          mkdir demo
+          git config user.name "vhs-action"
+          git config user.email "actions@github.com"
+          git init
+          touch demo.txt
+          git add demo.txt
+          echo -e "Type \"cd demo\"\n$(cat docs/basic.tape) > docs/basic.tape"
 
       - uses: charmbracelet/vhs-action@v1
         with:
