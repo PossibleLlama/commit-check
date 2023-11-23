@@ -10,13 +10,21 @@ Set Height 600
 Type "commit-check"
 Sleep 200ms
 Enter
-Sleep 200ms
+Sleep 500ms
 Down 2
+Sleep 500ms
 Enter
 Sleep 200ms
-Type "This new feature!"
-Enter 2
+Down
 Sleep 200ms
+Enter
+Sleep 500ms
+Type "This is a new feature!"
+Sleep 500ms
+Enter
+Sleep 100ms
+Enter
+Sleep 500ms
 Enter
 
 Sleep 5s
