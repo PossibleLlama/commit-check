@@ -57,7 +57,8 @@ jobs:
     - name: Check linting
       uses: golangci/golangci-lint-action@v3
       with:
-        skip-go-installation: true
+        version: latest
+        skip-pkg-cache: true
         args: --issues-exit-code=0 --out-format checkstyle -v ./... > ./lint.out
 
     - name: Store linting report
