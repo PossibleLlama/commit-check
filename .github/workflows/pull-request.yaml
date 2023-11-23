@@ -1,0 +1,47 @@
+name: "On pull request"
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
+      - synchronize
+
+jobs:
+  artifact-vhs:
+    name: "Create VHS artifact"
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+            ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: "./go.mod"
+  
+      - name: Get dependencies
+        run: go mod download
+  
+      - name: Install binary
+        run: |
+          APP_VERSION=$(git rev-list -1 HEAD)
+          go build -ldflags="-w -s -X 'main.VERSION=$APP_VERSION'" -o "./commit-check" ./exec/cli/main.go
+          mv ./commit-check /usr/local/bin/commit-check
+
+      - uses: charmbracelet/vhs-action@v1
+        with:
+          path: "docs/basic.tape"
+
+      - name: Commit back changes
+        run: |
+          git config --global user.name "vhs-action"
+          git config --global user.email "actions@github.com"
+          git commit -am "Updated vhs [skip ci]" || true
+          git push
