@@ -41,6 +41,10 @@ Down
 Sleep 1s
 Enter
 
-Type "git log --pretty=format:%s"
+# Display results
+# format subject, newline, body
+Hide
+Type "git log --pretty=format:%s%n%b"
 Enter
+Show
 Sleep 3s
