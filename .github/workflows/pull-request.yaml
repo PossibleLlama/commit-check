@@ -37,13 +37,14 @@ jobs:
 
       - name: Setup demo repository
         run: |
-          mkdir demo
+          mkdir ../demo
+          cd ../demo
+          git init
           git config user.name "vhs-action"
           git config user.email "actions@github.com"
-          git init
           touch demo.txt
           git add demo.txt
-          echo -e "Type \"cd demo\"\n$(cat docs/basic.tape) > docs/basic.tape"
+          echo -e "Type \"cd ../demo\"\n$(cat docs/basic.tape) > docs/basic.tape"
 
       - uses: charmbracelet/vhs-action@v1
         with:
