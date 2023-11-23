@@ -1,4 +1,4 @@
-Output examples/basic.gif
+Output basic.gif
 
 Require commit-check
 
