@@ -6,6 +6,7 @@ Set Shell "bash"
 Set FontSize 32
 Set Width 2000
 Set Height 1600
+Set PlaybackSpeed 0.5
 
 Type "commit-check"
 Sleep 500ms
