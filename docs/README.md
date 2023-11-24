@@ -11,6 +11,8 @@ use the same commit structure.
 
 ## Usage
 
+<img alt="Example usage of commit-check" src="examples/basic.gif" width="600" />
+
 The application will prompt you for inputs at each point.
 Anything added as arguments will be ignored.
 
@@ -29,3 +31,5 @@ from.
 commit-check -l angular
 commit-check --type-list conventionalcommit
 ```
+
+You can also add `--dry-run` flag, or shorthand of `-d`.
