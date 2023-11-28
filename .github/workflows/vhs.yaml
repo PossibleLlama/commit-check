@@ -31,6 +31,7 @@ jobs:
       - name: Setup demo repository
         run: |
           echo -e "Hide\nType \"cd ../demo && clear\"\nEnter\nShow\n$(cat $PWD/docs/basic.tape)" > $PWD/docs/basic.tape
+          echo -e "Hide\nType \"cd ../demo && clear\"\nEnter\nShow\n$(cat $PWD/docs/dry-run.tape)" > $PWD/docs/dry-run.tape
           mkdir ../demo
           cd ../demo
           git init --initial-branch=main
@@ -42,6 +43,10 @@ jobs:
       - uses: charmbracelet/vhs-action@v1
         with:
           path: "docs/basic.tape"
+
+      - uses: charmbracelet/vhs-action@v1
+        with:
+          path: "docs/dry-run.tape"
 
       - name: Commit back changes
         run: |
