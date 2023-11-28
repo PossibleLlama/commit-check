@@ -22,8 +22,6 @@ Sleep 1s
 Enter
 
 # Select scope
-Sleep 500ms
-Down
 Sleep 1s
 Enter
 
