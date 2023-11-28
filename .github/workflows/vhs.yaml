@@ -1,44 +1,36 @@
-name: "On pull request"
-
+name: vhs
 on:
-  pull_request:
-    types:
-      - opened
-      - reopened
-      - edited
-      - synchronize
+  push:
+    paths:
+      - docs/*.tape
 
 jobs:
   artifact-vhs:
     name: "Create VHS artifact"
     runs-on: ubuntu-latest
     permissions:
-        contents: write
+      contents: write
     steps:
 
       - name: Check out code
         uses: actions/checkout@v4
-        with:
-            ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Set up Go 1.x
         uses: actions/setup-go@v4
         with:
           go-version-file: "./go.mod"
-  
+
       - name: Get dependencies
         run: go mod download
 
       - name: Install binary
         run: |
-          APP_VERSION=$(git rev-list -1 HEAD)
-          go build -ldflags="-w -s -X 'main.VERSION=$APP_VERSION'" -o "./commit-check" ./exec/cli/main.go
+          go build -ldflags="-w -s -X 'main.VERSION=demo'" -o "./commit-check" ./exec/cli/main.go
           mv ./commit-check /usr/local/bin/commit-check
 
       - name: Setup demo repository
         run: |
           echo -e "Hide\nType \"cd ../demo && clear\"\nEnter\nShow\n$(cat $PWD/docs/basic.tape)" > $PWD/docs/basic.tape
-          cat docs/basic.tape
           mkdir ../demo
           cd ../demo
           git init --initial-branch=main
