@@ -42,3 +42,5 @@ Sleep 500ms
 Down
 Sleep 1s
 Enter
+
+Sleep 3s
