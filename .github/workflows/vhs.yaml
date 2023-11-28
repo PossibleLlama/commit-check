@@ -41,12 +41,12 @@ jobs:
           git add demo.txt
 
       - name: Generate basic
-        uses: charmbracelet/vhs-action@v1
+        uses: charmbracelet/vhs-action@v2
         with:
           path: "docs/basic.tape"
 
       - name: Generate dry run
-        uses: charmbracelet/vhs-action@v1
+        uses: charmbracelet/vhs-action@v2
         with:
           path: "docs/dry-run.tape"
 
