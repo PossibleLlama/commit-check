@@ -24,7 +24,10 @@ Sleep 500ms
 Down
 Sleep 1s
 Enter
+Sleep 500ms
 Type "ABC-123"
+Sleep 1s
+Enter
 
 # Add description
 Sleep 500ms

@@ -40,11 +40,13 @@ jobs:
           touch demo.txt
           git add demo.txt
 
-      - uses: charmbracelet/vhs-action@v1
+      - name: Generate basic
+        uses: charmbracelet/vhs-action@v1
         with:
           path: "docs/basic.tape"
 
-      - uses: charmbracelet/vhs-action@v1
+      - name: Generate dry run
+        uses: charmbracelet/vhs-action@v1
         with:
           path: "docs/dry-run.tape"
 
