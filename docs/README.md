@@ -33,3 +33,5 @@ commit-check --type-list conventionalcommit
 ```
 
 You can also add `--dry-run` flag, or shorthand of `-d`.
+
+<img alt="Example usage of commit-check with all arguments" src="examples/dry-run.gif" width="600" />
