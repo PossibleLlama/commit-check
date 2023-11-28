@@ -9,7 +9,7 @@ Set Width 1600
 Set Height 1000
 
 # Start app
-Type "commit-check --dry-run"
+Type "commit-check --dry-run --type-list angular"
 Sleep 500ms
 Enter
 
