@@ -1,26 +1,10 @@
 package prompt
 
 import (
-	"net/http"
-	"time"
-
 	"github.com/PossibleLlama/commit-check/model"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
-
-func (p PromptCommit) CheckJira() tea.Msg {
-	c := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-	res, err := c.Get("https://google.com")
-	if err != nil {
-		return nil
-	}
-	defer res.Body.Close()
-
-	return model.ScopeItem{Heading: res.Status, Body: "Jira ticket"}
-}
 
 func SetupListOfScopes() list.Model {
 	scopeItems := []list.Item{
