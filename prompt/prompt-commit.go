@@ -87,7 +87,7 @@ func (p PromptCommit) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return p.UpdateBreakingChange(msg)
 			}
 		}
-	case ScopeItem:
+	case model.ScopeItem:
 		cmd := p.scopeOptions.InsertItem(0, msg)
 		return p, cmd
 	}
