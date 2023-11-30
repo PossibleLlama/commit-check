@@ -1,7 +1,6 @@
 package plugins
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/PossibleLlama/commit-check/model"
@@ -23,6 +22,12 @@ func (j *Jira) Init() error {
 	username := viper.GetString("plugins.jira.username")
 	password := viper.GetString("plugins.jira.apiKey")
 
+	if username == "" || password == "" {
+		return PluginErrorMissingCreds
+	} else if url == "" {
+		return PluginErrorMissingConfig
+	}
+
 	cl := jira.BasicAuthTransport{
 		Username: username,
 		Password: password,
@@ -32,7 +37,7 @@ func (j *Jira) Init() error {
 	if err != nil {
 		return err
 	} else if !client.Authentication.Authenticated() {
-		return errors.New("invalid credentials")
+		return PluginErrorInvalidCreds
 	}
 
 	j.client = client
@@ -43,7 +48,16 @@ func (j *Jira) ListCards() tea.Msg {
 	last := 0
 	items := []model.ScopeItem{}
 
-	jql := fmt.Sprintf("project = %s AND assignee = currentUser()", viper.GetString("plugins.jira.project"))
+	jql := "assignee = currentUser()"
+	proj := viper.GetString("plugins.jira.project")
+	status := viper.GetString("plugins.jira.status")
+
+	if proj != "" {
+		jql = fmt.Sprintf("project = %s AND %s", proj, jql)
+	}
+	if status != "" {
+		jql = fmt.Sprintf("status = %s AND %s", status, jql)
+	}
 
 	for {
 		options := &jira.SearchOptions{

@@ -2,7 +2,6 @@ package plugins
 
 import (
 	"context"
-	"errors"
 	"sync"
 
 	"github.com/PossibleLlama/commit-check/model"
@@ -25,11 +24,14 @@ func (c *Clickup) Init() error {
 
 	key := viper.GetString("plugins.clickup.apiKey")
 	if key == "" {
-		return errors.New("Clickup API key not set")
+		return PluginErrorMissingCreds
+	} else if len(viper.GetStringSlice("plugins.clickup.listIds")) == 0 {
+		return PluginErrorMissingConfig
 	}
+
 	c.client = clickup.NewClient(nil, key)
 	if c.client == nil {
-		return errors.New("Failed to create clickup client")
+		return PluginErrorInvalidCreds
 	}
 
 	return nil
