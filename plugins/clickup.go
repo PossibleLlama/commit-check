@@ -42,8 +42,8 @@ func (c *Clickup) ListCards() tea.Msg {
 
 	taskOptions := clickup.GetTasksOptions{Statuses: []string{"to do", "in progress"}}
 
-	// TODO, how do we want this to be discovered?
 	listIds := viper.GetStringSlice("plugins.clickup.listIds")
+	email := viper.GetString("plugins.clickup.assignee")
 
 	var wg sync.WaitGroup
 
@@ -57,7 +57,16 @@ func (c *Clickup) ListCards() tea.Msg {
 			}
 
 			for _, task := range tasks {
-				items = append(items, model.ScopeItem{Heading: task.ID, Body: task.Name})
+				if email != "" {
+					for _, assignee := range task.Assignees {
+						if assignee.Email == email {
+							items = append(items, model.ScopeItem{Heading: task.ID, Body: task.Name})
+							break
+						}
+					}
+				} else {
+					items = append(items, model.ScopeItem{Heading: task.ID, Body: task.Name})
+				}
 			}
 		}(listId)
 	}

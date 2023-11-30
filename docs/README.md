@@ -55,6 +55,7 @@ plugins:
     apiKey: "0123"
     listIds:
       - "0123"
+    assignee: "yourname@company.com"
 ```
 
 ## Plugins
@@ -83,3 +84,6 @@ Required configuration:
 - `listIds` - A list of IDs to search for tasks in.
   You will likely need to use the API to identify which lists are
   the ones you want to use.
+
+Optional configuration:
+- `assignee` - Filter the card to only those assigned this email.
