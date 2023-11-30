@@ -59,6 +59,14 @@ func (p PromptCommit) Init() tea.Cmd {
 		}
 		// TODO, log error
 	}
+	if viper.Sub("plugins.jira") != nil {
+		p := plugins.NewJira()
+		err := p.Init()
+		if err == nil {
+			ps = append(ps, p)
+		}
+		// TODO, log error
+	}
 
 	msgs := []tea.Cmd{}
 	for _, p := range ps {
