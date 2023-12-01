@@ -2,6 +2,7 @@ package plugins
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/PossibleLlama/commit-check/model"
 	"github.com/andygrunwald/go-jira"
@@ -49,14 +50,25 @@ func (j *Jira) ListCards() tea.Msg {
 	items := []model.ScopeItem{}
 
 	jql := "assignee = currentUser()"
-	proj := viper.GetString("plugins.jira.project")
-	status := viper.GetString("plugins.jira.status")
 
-	if proj != "" {
-		jql = fmt.Sprintf("project = %s AND %s", proj, jql)
+	projects := []string{}
+	for _, p := range viper.GetStringSlice("plugins.jira.projects") {
+		if strings.TrimSpace(p) != "" {
+			projects = append(projects, fmt.Sprintf("\"%s\"", p))
+		}
 	}
-	if status != "" {
-		jql = fmt.Sprintf("status = %s AND %s", status, jql)
+	status := []string{}
+	for _, s := range viper.GetStringSlice("plugins.jira.status") {
+		if strings.TrimSpace(s) != "" {
+			status = append(status, fmt.Sprintf("\"%s\"", s))
+		}
+	}
+
+	if len(projects) > 0 {
+		jql = fmt.Sprintf("project IN (%s) AND %s", strings.Join(projects, ", "), jql)
+	}
+	if len(status) > 0 {
+		jql = fmt.Sprintf("status IN (%s) AND %s", strings.Join(status, ", "), jql)
 	}
 
 	for {

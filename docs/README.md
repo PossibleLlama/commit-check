@@ -49,8 +49,10 @@ plugins:
     url: "https://company.atlassian.net"
     username: "yourname@company.com"
     apiKey: "0123"
-    project: "ABC"
-    status: "In Progress"
+    project:
+      - "ABC"
+    status:
+      - "In Progress"
   clickup:
     apiKey: "0123"
     listIds:
@@ -74,8 +76,10 @@ Required configuration:
 - `apiKey` - A PAT for the user.
 
 Optional configuration:
-- `project` - Filter the cards to only those in the given project.
-- `status` - Filter the card to only those in the given status.
+- `projects` - Filter the cards to only those in the given projects/
+  List of strings.
+- `status` - Filter the card to only those in the given statuses.
+  List of strings.
  
 ### ClickUp
 
@@ -84,6 +88,7 @@ Required configuration:
 - `listIds` - A list of IDs to search for tasks in.
   You will likely need to use the API to identify which lists are
   the ones you want to use.
+  List of strings.
 
 Optional configuration:
 - `assignee` - Filter the card to only those assigned this email.
