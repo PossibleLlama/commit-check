@@ -13,8 +13,8 @@ type Plugin interface {
 }
 
 var (
-	PluginErrorMissingCreds = errors.New("missing credentials")
-	PluginErrorInvalidCreds = errors.New("invalid credentials")
+	ErrorPluginMissingCreds = errors.New("missing credentials")
+	ErrorPluginInvalidCreds = errors.New("invalid credentials")
 
-	PluginErrorMissingConfig = errors.New("missing required configuration. check README for valid configuration")
+	ErrorPluginMissingConfig = errors.New("missing required configuration. check README for valid configuration")
 )

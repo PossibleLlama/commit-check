@@ -24,9 +24,9 @@ func (j *Jira) Init() error {
 	password := viper.GetString("plugins.jira.apiKey")
 
 	if username == "" || password == "" {
-		return PluginErrorMissingCreds
+		return ErrorPluginMissingCreds
 	} else if url == "" {
-		return PluginErrorMissingConfig
+		return ErrorPluginMissingConfig
 	}
 
 	cl := jira.BasicAuthTransport{
@@ -38,7 +38,7 @@ func (j *Jira) Init() error {
 	if err != nil {
 		return err
 	} else if !client.Authentication.Authenticated() {
-		return PluginErrorInvalidCreds
+		return ErrorPluginInvalidCreds
 	}
 
 	j.client = client

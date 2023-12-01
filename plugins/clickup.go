@@ -24,14 +24,14 @@ func (c *Clickup) Init() error {
 
 	key := viper.GetString("plugins.clickup.apiKey")
 	if key == "" {
-		return PluginErrorMissingCreds
+		return ErrorPluginMissingCreds
 	} else if len(viper.GetStringSlice("plugins.clickup.listIds")) == 0 {
-		return PluginErrorMissingConfig
+		return ErrorPluginMissingConfig
 	}
 
 	c.client = clickup.NewClient(nil, key)
 	if c.client == nil {
-		return PluginErrorInvalidCreds
+		return ErrorPluginInvalidCreds
 	}
 
 	return nil
