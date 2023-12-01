@@ -8,8 +8,8 @@ import (
 
 func SetupListOfScopes() list.Model {
 	scopeItems := []list.Item{
-		model.ScopeItem{Heading: "None", Body: "No scope"},
-		model.ScopeItem{Heading: "Other", Body: "Manual input"},
+		model.ScopeItem{ID: "None", Body: "No scope"},
+		model.ScopeItem{ID: "Other", Body: "Manual input"},
 	}
 	scopeList := list.New(scopeItems, list.NewDefaultDelegate(), 0, 0)
 	scopeList.Title = "Scope of change"
@@ -24,7 +24,7 @@ func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "enter":
 			selectedItem := p.scopeOptions.SelectedItem()
 			selectedScope := selectedItem.(model.ScopeItem)
-			switch selectedScope.Heading {
+			switch selectedScope.ID {
 			case "None":
 				p.page++
 				p.inputMultiLine.Focus()
@@ -43,7 +43,7 @@ func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return p, nil
 				}
 			default:
-				p.commit.Scope = selectedScope.Heading
+				p.commit.Scope = selectedScope.ID
 				p.page++
 				p.inputMultiLine.Focus()
 				return p, nil

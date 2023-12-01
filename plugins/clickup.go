@@ -60,12 +60,12 @@ func (c *Clickup) ListCards() tea.Msg {
 				if email != "" {
 					for _, assignee := range task.Assignees {
 						if assignee.Email == email {
-							items = append(items, model.ScopeItem{Heading: task.ID, Body: task.Name})
+							items = append(items, model.ScopeItem{ID: task.ID, Body: task.Name})
 							break
 						}
 					}
 				} else {
-					items = append(items, model.ScopeItem{Heading: task.ID, Body: task.Name})
+					items = append(items, model.ScopeItem{ID: task.ID, Body: task.Name})
 				}
 			}
 		}(listId)

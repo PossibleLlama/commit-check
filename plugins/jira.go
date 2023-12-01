@@ -83,7 +83,7 @@ func (j *Jira) ListCards() tea.Msg {
 		}
 
 		for _, task := range tasks {
-			items = append(items, model.ScopeItem{Heading: task.Key, Body: task.Fields.Summary})
+			items = append(items, model.ScopeItem{ID: task.Key, Body: task.Fields.Summary})
 		}
 
 		last = resp.StartAt + len(tasks)
