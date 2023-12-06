@@ -1,39 +1,15 @@
 package prompt
 
 import (
-	"net/http"
-	"time"
-
+	"github.com/PossibleLlama/commit-check/model"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-type ScopeItem struct {
-	title       string
-	description string
-}
-
-func (s ScopeItem) Title() string       { return s.title }
-func (s ScopeItem) Description() string { return s.description }
-func (s ScopeItem) FilterValue() string { return s.title }
-
-func (p PromptCommit) CheckJira() tea.Msg {
-	c := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-	res, err := c.Get("https://google.com")
-	if err != nil {
-		return nil
-	}
-	defer res.Body.Close()
-
-	return ScopeItem{title: res.Status, description: "Jira ticket"}
-}
-
 func SetupListOfScopes() list.Model {
 	scopeItems := []list.Item{
-		ScopeItem{title: "None", description: "No scope"},
-		ScopeItem{title: "Other", description: "Manual input"},
+		model.ScopeItem{ID: "None", Body: "No scope"},
+		model.ScopeItem{ID: "Other", Body: "Manual input"},
 	}
 	scopeList := list.New(scopeItems, list.NewDefaultDelegate(), 0, 0)
 	scopeList.Title = "Scope of change"
@@ -47,8 +23,8 @@ func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "enter":
 			selectedItem := p.scopeOptions.SelectedItem()
-			selectedScope := selectedItem.(ScopeItem)
-			switch selectedScope.title {
+			selectedScope := selectedItem.(model.ScopeItem)
+			switch selectedScope.ID {
 			case "None":
 				p.page++
 				p.inputMultiLine.Focus()
@@ -67,7 +43,7 @@ func (p PromptCommit) UpdateScope(msg tea.Msg) (tea.Model, tea.Cmd) {
 					return p, nil
 				}
 			default:
-				p.commit.Scope = selectedScope.title
+				p.commit.Scope = selectedScope.ID
 				p.page++
 				p.inputMultiLine.Focus()
 				return p, nil

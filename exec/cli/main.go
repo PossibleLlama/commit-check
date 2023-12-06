@@ -10,6 +10,7 @@ import (
 	"github.com/PossibleLlama/commit-check/prompt"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // Build time variables
@@ -75,4 +76,24 @@ func init() {
 		"d",
 		false,
 		"run the program without committing")
+
+	cobra.OnInitialize(initConfig)
+}
+
+// initConfig reads in config file and ENV variables if set
+func initConfig() {
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("/etc/commit-check/")
+	viper.AddConfigPath("$HOME/.commit-check")
+
+	// Allows for variables such as CC_PLUGINS_CLICKUP_APIKEY
+	viper.SetEnvPrefix("CC")
+
+	// If a config file is found, read it in
+	viper.ReadInConfig()
+	// TODO, only print when verbose
+	// if err := viper.ReadInConfig(); err != nil {
+	// 	fmt.Sprintf("Unable to use config file: '%s'. %s", viper.ConfigFileUsed(), err.Error())
+	// }
 }

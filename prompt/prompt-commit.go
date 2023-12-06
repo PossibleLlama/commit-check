@@ -2,6 +2,8 @@ package prompt
 
 import (
 	"github.com/PossibleLlama/commit-check/model"
+	"github.com/PossibleLlama/commit-check/plugins"
+	"github.com/spf13/viper"
 
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/textarea"
@@ -47,8 +49,31 @@ func NewPromptCommit(typeNameOptions []model.CommitType, cmt *model.Commit) *Pro
 }
 
 func (p PromptCommit) Init() tea.Cmd {
+	ps := []plugins.Plugin{}
+
+	if viper.Sub("plugins.clickup") != nil {
+		p := plugins.NewClickup()
+		err := p.Init()
+		if err == nil {
+			ps = append(ps, p)
+		}
+		// TODO, log error
+	}
+	if viper.Sub("plugins.jira") != nil {
+		p := plugins.NewJira()
+		err := p.Init()
+		if err == nil {
+			ps = append(ps, p)
+		}
+		// TODO, log error
+	}
+
+	msgs := []tea.Cmd{}
+	for _, p := range ps {
+		msgs = append(msgs, p.ListCards)
+	}
 	return tea.Batch(
-	// p.CheckJira,
+		msgs...,
 	)
 }
 
@@ -87,8 +112,12 @@ func (p PromptCommit) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return p.UpdateBreakingChange(msg)
 			}
 		}
-	case ScopeItem:
-		cmd := p.scopeOptions.InsertItem(0, msg)
+	case []model.ScopeItem:
+		var cmd tea.Cmd
+		for _, item := range msg {
+			// Will only return last command
+			cmd = p.scopeOptions.InsertItem(0, item)
+		}
 		return p, cmd
 	}
 	return p, nil
