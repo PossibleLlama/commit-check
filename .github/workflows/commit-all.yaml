@@ -31,3 +31,9 @@ jobs:
   test-small-correctness:
     name: Test small correctness
     uses: PossibleLlama/workflows/.github/workflows/golang-testing-small-correctness.yaml@v0.1.10
+
+  security:
+    name: Security checks
+    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.1.10
+    with:
+      upload-sarif: false

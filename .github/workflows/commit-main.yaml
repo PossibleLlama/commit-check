@@ -28,6 +28,14 @@ jobs:
       arch: ${{ matrix.goarch }}
       retention-days: 30
 
+  security:
+    name: Security checks
+    permissions:
+      security-events: write
+    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.1.10
+    with:
+      upload-sarif: true
+
   release:
     name: Release
     runs-on: ubuntu-latest
