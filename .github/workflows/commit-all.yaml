@@ -71,31 +71,5 @@ jobs:
         retention-days: 2
 
   test-small-correctness:
-    name: Small Tests - Correctness
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Get dependencies
-      run: go mod download && go install gotest.tools/gotestsum@latest
-
-    - name: Correctness tests
-      run: gotestsum --packages="./..." --junitfile="./correctness-tests.xml" -- -coverprofile="./correctness-tests-coverage.out" -count=10 -race
-
-    - name: Store test reports
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: Test small reports
-        path: |
-          ./correctness-tests.xml
-          ./correctness-tests-coverage.out
-        if-no-files-found: ignore
-        retention-days: 2
+    name: "Test small correctness"
+    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small-correctness.yaml@v0.1.0
