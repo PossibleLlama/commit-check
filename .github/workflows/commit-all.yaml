@@ -7,7 +7,6 @@ permissions: read-all
 jobs:
   binary:
     name: Binary
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
@@ -16,24 +15,12 @@ jobs:
         goarch:
           - amd64
           - arm64
-    steps:
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Get dependencies
-      run: go mod download
-
-    - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'main.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./exec/cli/main.go
-      env:
-        GOOS: ${{ matrix.goos }}
-        GOARCH: ${{ matrix.goarch }}
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.1.1
+    with:
+      source-path: "./exec/cli/main.go"
+      build-flags: "-ldflags=\"-w -s -X 'main.VERSION=$(git rev-list -1 HEAD)'\""
+      os: ${{ matrix.goos }}
+      arch: ${{ matrix.goarch }}
 
   linting:
     name: Linting
@@ -71,5 +58,5 @@ jobs:
         retention-days: 2
 
   test-small-correctness:
-    name: "Test small correctness"
-    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small-correctness.yaml@v0.1.0
+    name: Test small correctness
+    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small-correctness.yaml@v0.1.1
