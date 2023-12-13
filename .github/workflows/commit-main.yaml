@@ -10,7 +10,6 @@ permissions: read-all
 jobs:
   binary:
     name: Binary
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
@@ -21,35 +20,13 @@ jobs:
         goarch:
           - amd64
           - arm64
-    steps:
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Get dependencies
-      run: go mod download
-
-    - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'main.VERSION=$APP_VERSION'" -o "./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin" ./exec/cli/main.go
-      env:
-        GOOS: ${{ matrix.goos }}
-        GOARCH: ${{ matrix.goarch }}
-
-    - name: Rename on windows
-      if: matrix.goos == 'windows'
-      run: mv ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.bin ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.exe
-
-    - name: Store binaries
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./${{ github.repository }}-${{ matrix.goos }}-${{ matrix.goarch }}.*
-        if-no-files-found: ignore
-        retention-days: 30
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v.0.1.2
+    with:
+      source-path: "./exec/cli/main.go"
+      build-flags: "-ldflags=\"-w -s -X 'main.VERSION=$(git rev-list -1 HEAD)'\""
+      os: ${{ matrix.goos }}
+      arch: ${{ matrix.goarch }}
+      retention-days: 30
 
   release:
     name: Release
