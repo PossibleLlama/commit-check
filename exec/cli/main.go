@@ -52,6 +52,7 @@ var rootCmd = &cobra.Command{
 		if dryRun || !commit.IsValid() {
 			fmt.Println("git", strings.Join(commitArgs, " "))
 		} else {
+			//#nosec G204 -- The point of this app is to run git commands
 			runOsCmd := exec.Command("git", commitArgs...)
 
 			osCmdOutput, runErr := runOsCmd.CombinedOutput()
@@ -91,6 +92,7 @@ func initConfig() {
 	viper.SetEnvPrefix("CC")
 
 	// If a config file is found, read it in
+	//#nosec G104 -- If no config file is found, no error should be raised
 	viper.ReadInConfig()
 	// TODO, only print when verbose
 	// if err := viper.ReadInConfig(); err != nil {

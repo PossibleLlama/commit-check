@@ -7,7 +7,6 @@ permissions: read-all
 jobs:
   binary:
     name: Binary
-    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
       matrix:
@@ -16,86 +15,28 @@ jobs:
         goarch:
           - amd64
           - arm64
-    steps:
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Get dependencies
-      run: go mod download
-
-    - name: Build
-      run: APP_VERSION=$(git rev-list -1 HEAD) && go build -ldflags="-w -s -X 'main.VERSION=$APP_VERSION'" -o "./${{ github.repository }}.bin" ./exec/cli/main.go
-      env:
-        GOOS: ${{ matrix.goos }}
-        GOARCH: ${{ matrix.goarch }}
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.0
+    with:
+      source-path: "./exec/cli/main.go"
+      build-flags: "-ldflags=\"-w -s -X 'main.VERSION=$(git rev-list -1 HEAD)'\""
+      os: ${{ matrix.goos }}
+      arch: ${{ matrix.goarch }}
 
   linting:
     name: Linting
-    runs-on: ubuntu-latest
-    steps:
+    uses: PossibleLlama/workflows/.github/workflows/golang-linting.yaml@v0.2.0
+    with:
+      source-path: "./exec/cli/main.go"
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
+  test-small:
+    name: Test small
+    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small.yaml@v0.2.0
+    with:
+      enable-performance: false
+      enable-fuzz: false
 
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Check formatting
-      run: go fmt ./...
-
-    - name: Check vet
-      run: go vet ./...
-
-    - name: Check linting
-      uses: golangci/golangci-lint-action@v3
-      with:
-        version: latest
-        skip-pkg-cache: true
-        args: --issues-exit-code=0 --out-format checkstyle -v ./... > ./lint.out
-
-    - name: Store linting report
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: Linting report
-        path: ./lint.out
-        if-no-files-found: ignore
-        retention-days: 2
-
-  test-small-correctness:
-    name: Small Tests - Correctness
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Get dependencies
-      run: go mod download && go install gotest.tools/gotestsum@latest
-
-    - name: Correctness tests
-      run: gotestsum --packages="./..." --junitfile="./correctness-tests.xml" -- -coverprofile="./correctness-tests-coverage.out" -count=10 -race
-
-    - name: Store test reports
-      uses: actions/upload-artifact@v3
-      if: always()
-      with:
-        name: Test small reports
-        path: |
-          ./correctness-tests.xml
-          ./correctness-tests-coverage.out
-        if-no-files-found: ignore
-        retention-days: 2
+  security:
+    name: Security checks
+    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.2.0
+    with:
+      upload-sarif: false
