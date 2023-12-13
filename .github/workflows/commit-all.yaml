@@ -15,7 +15,7 @@ jobs:
         goarch:
           - amd64
           - arm64
-    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.1.7
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.1.9
     with:
       source-path: "./exec/cli/main.go"
       build-flags: "-ldflags=\"-w -s -X 'main.VERSION=$(git rev-list -1 HEAD)'\""
@@ -24,10 +24,10 @@ jobs:
 
   linting:
     name: Linting
-    uses: PossibleLlama/workflows/.github/workflows/golang-linting.yaml@v0.1.7
+    uses: PossibleLlama/workflows/.github/workflows/golang-linting.yaml@v0.1.9
     with:
       source-path: "./exec/cli/main.go"
 
   test-small-correctness:
     name: Test small correctness
-    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small-correctness.yaml@v0.1.7
+    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small-correctness.yaml@v0.1.9

@@ -5,40 +5,10 @@ on: push
 permissions: read-all
 
 jobs:
-  SCA:
-    name: SCA
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v4
-
-    - name: Set up Go 1.x
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: "./go.mod"
-
-    - name: Write Go List
-      run: go list -json -m > go.list
-
-    - name: Run Nancy
-      uses: sonatype-nexus-community/nancy-github-action@main
-
-  SAST:
-    name: SAST
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Check out code into the Go module directory
-        uses: actions/checkout@v4
-
-      - name: Set up Go 1.x
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: "./go.mod"
-
-      # TODO check on progress of https://github.com/golang/go/issues/61347
-      - name: Govulncheck
-        uses: golang/govulncheck-action@v1
-        with:
-            go-package: ./...
+  security:
+    name: Security checks
+    permissions:
+      security-events: write
+    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.1.9
+    with:
+      upload-sarif: true
