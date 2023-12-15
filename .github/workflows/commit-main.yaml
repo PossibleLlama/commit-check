@@ -61,7 +61,7 @@ jobs:
         path: .
 
     - name: Move binaries
-      run: mv ./artifact/* .
+      run: mv ./Binaries/* .
 
     - name: Semantic Release
       run: |
