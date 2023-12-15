@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/PossibleLlama/commit-check/compare/v1.2.0...v1.2.1) (2023-12-15)
+
+
+### Bug Fixes
+
+* Get the artifacts uploaded correctly ([#19](https://github.com/PossibleLlama/commit-check/issues/19)) ([e33758a](https://github.com/PossibleLlama/commit-check/commit/e33758a0799dca9e83ec13b016fed960c769aead))
+
 # [1.2.0](https://github.com/PossibleLlama/commit-check/compare/v1.1.2...v1.2.0) (2023-11-28)
 
 
