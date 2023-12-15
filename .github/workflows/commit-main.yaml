@@ -62,10 +62,10 @@ jobs:
 
     - name: Move binaries
       run: |
+        mv ./Binaries-darwin-amd64/* .
+        mv ./Binaries-darwin-arm64/* .
         mv ./Binaries-linux-amd64/* .
         mv ./Binaries-linux-arm64/* .
-        mv ./Binaries-mac-amd64/* .
-        mv ./Binaries-mac-arm64/* .
         mv ./Binaries-windows-amd64/* .
         mv ./Binaries-windows-arm64/* .
 
