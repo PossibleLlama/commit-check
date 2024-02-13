@@ -92,10 +92,7 @@ func initConfig() {
 	viper.SetEnvPrefix("CC")
 
 	// If a config file is found, read it in
-	//#nosec G104 -- If no config file is found, no error should be raised
-	viper.ReadInConfig()
-	// TODO, only print when verbose
-	// if err := viper.ReadInConfig(); err != nil {
-	// 	fmt.Sprintf("Unable to use config file: '%s'. %s", viper.ConfigFileUsed(), err.Error())
-	// }
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf("unable to use config file: '%s'. %s", viper.ConfigFileUsed(), err.Error())
+	}
 }
