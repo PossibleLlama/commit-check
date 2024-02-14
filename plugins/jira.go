@@ -37,8 +37,6 @@ func (j *Jira) Init() error {
 	client, err := jira.NewClient(cl.Client(), url)
 	if err != nil {
 		return err
-	} else if !client.Authentication.Authenticated() {
-		return ErrorPluginInvalidCreds
 	}
 
 	j.client = client
