@@ -1,6 +1,6 @@
 module github.com/PossibleLlama/commit-check
 
-go 1.22.0
+go 1.22.1
 
 require (
 	github.com/charmbracelet/bubbletea v0.25.0
