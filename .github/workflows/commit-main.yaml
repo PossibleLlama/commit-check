@@ -20,7 +20,7 @@ jobs:
         goarch:
           - amd64
           - arm64
-    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@binary-attestation
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.16
     permissions:
       id-token: write
       contents: read
@@ -50,8 +50,6 @@ jobs:
       contents: write
       issues: write
       pull-requests: write
-      attestations: write
-      id-token: write
     steps:
 
     - name: Check out code into the Go module directory

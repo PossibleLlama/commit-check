@@ -15,17 +15,12 @@ jobs:
         goarch:
           - amd64
           - arm64
-    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@binary-attestation
-    permissions:
-      id-token: write
-      contents: read
-      attestations: write
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.16
     with:
       source-path: "./exec/cli/main.go"
       build-flags: "-ldflags=\"-w -s -X 'main.VERSION=$(git rev-list -1 HEAD)'\""
       os: ${{ matrix.goos }}
       arch: ${{ matrix.goarch }}
-      attestation: true
 
   linting:
     name: Linting
