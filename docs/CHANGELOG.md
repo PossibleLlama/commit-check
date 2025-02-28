@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/PossibleLlama/commit-check/compare/v1.2.2...v1.3.0) (2025-02-28)
+
+
+### Features
+
+* Add attestations ([#58](https://github.com/PossibleLlama/commit-check/issues/58)) ([b78883d](https://github.com/PossibleLlama/commit-check/commit/b78883d63ea2e42f674e813c2669dc5f14b60604))
+
 ## [1.2.2](https://github.com/PossibleLlama/commit-check/compare/v1.2.1...v1.2.2) (2023-12-15)
 
 
