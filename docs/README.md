@@ -92,3 +92,27 @@ Required configuration:
 
 Optional configuration:
 - `assignee` - Filter the card to only those assigned this email.
+
+## Verification
+
+To verify that the downloaded artifacts were built from
+this repository, you can run a check using the [Github CLI](https://cli.github.com/manual/gh_attestation_verify).
+
+If these commands fail, it indicates that they were not
+built correctly, and it's advised that you download the
+artifacts directly from the [releases page](https://github.com/PossibleLlama/commit-check/releases).
+
+To verify that the downloaded artifact originates from
+this repo, you can run the following against the binary.
+
+``` bash
+gh attestation verify --owner "PossibleLlama" commit-check.bin
+```
+
+The build uses [this reusable workflow](https://github.com/PossibleLlama/workflows/blob/main/.github/workflows/golang-binary.yaml),
+and as such the build can be verified that it was built
+from that workflow.
+
+```bash
+Run gh attestation verify --owner PossibleLlama --signer-workflow "PossibleLlama/workflows/.github/workflows/golang-binary.yaml" commit-check-linux-amd64.bin
+```

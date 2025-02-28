@@ -20,13 +20,18 @@ jobs:
         goarch:
           - amd64
           - arm64
-    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.15
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.16
+    permissions:
+      id-token: write
+      contents: read
+      attestations: write
     with:
       source-path: "./exec/cli/main.go"
       build-flags: "-ldflags=\"-w -s -X 'main.VERSION=$(git rev-list -1 HEAD)'\""
       os: ${{ matrix.goos }}
       arch: ${{ matrix.goarch }}
       retention-days: 30
+      attestation: true
 
   security:
     name: Security checks
