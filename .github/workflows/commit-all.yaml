@@ -24,13 +24,13 @@ jobs:
 
   linting:
     name: Linting
-    uses: PossibleLlama/workflows/.github/workflows/golang-linting.yaml@v0.2.15
+    uses: PossibleLlama/workflows/.github/workflows/golang-linting.yaml@v0.2.16
     with:
       source-path: "./exec/cli/main.go"
 
   test-small:
     name: Test small
-    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small.yaml@v0.2.15
+    uses: PossibleLlama/workflows/.github/workflows/golang-testing-small.yaml@v0.2.16
     with:
       enable-performance: false
       enable-fuzz: false
