@@ -114,5 +114,5 @@ and as such the build can be verified that it was built
 from that workflow.
 
 ```bash
-Run gh attestation verify --owner PossibleLlama --signer-workflow "PossibleLlama/workflows/.github/workflows/golang-binary.yaml" commit-check-linux-amd64.bin
+gh attestation verify --owner PossibleLlama --signer-workflow "PossibleLlama/workflows/.github/workflows/golang-binary.yaml" commit-check-linux-amd64.bin
 ```
