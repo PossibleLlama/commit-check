@@ -16,8 +16,6 @@ Enter
 # Select type
 Sleep 500ms
 Down
-Sleep 500ms
-Down
 Sleep 1s
 Enter
 
@@ -27,7 +25,7 @@ Enter
 
 # Add description
 Sleep 500ms
-Type "This is a new feature!"
+Type "Fixed the bug"
 Sleep 500ms
 Enter
 Sleep 1s

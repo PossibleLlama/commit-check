@@ -1,6 +1,9 @@
 package model
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 type CommitType string
 
@@ -47,11 +50,10 @@ type Commit struct {
 }
 
 func (c Commit) String() string {
-	scope := ""
 	if c.Scope != "" {
-		scope = "(" + c.Scope + ")"
+		c.Scope = "(" + c.Scope + ")"
 	}
-	s := string(c.Type) + scope + ": " + strings.TrimSpace(c.Description)
+	s := fmt.Sprintf("%s%s: %s", c.Type, c.Scope, strings.TrimSpace(c.Description))
 	if c.IsBreakingChange {
 		s += "\n\nBREAKING CHANGE"
 	}
