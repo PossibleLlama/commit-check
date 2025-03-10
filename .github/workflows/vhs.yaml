@@ -7,6 +7,7 @@ on:
 jobs:
   artifact-vhs:
     name: "Create VHS artifact"
+    if: false # Wait for https://github.com/charmbracelet/vhs-action/issues/459
     runs-on: ubuntu-latest
     permissions:
       contents: write
