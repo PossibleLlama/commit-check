@@ -39,10 +39,19 @@ var rootCmd = &cobra.Command{
 			fmt.Println("convention type must be either 'angular' or 'conventionalcommit' but was", conventionType)
 			os.Exit(1)
 		}
+		var cTypes []model.CommitType
+		switch conventionType {
+		case "angular":
+			cTypes = model.TypeAngular
+			break
+		case "conventionalcommit":
+			cTypes = model.TypeConventionalCommit
+			break
+		}
 
 		commit := &model.Commit{}
 
-		p := tea.NewProgram(prompt.NewPromptCommit(model.TypeAngular, commit), tea.WithAltScreen())
+		p := tea.NewProgram(prompt.NewPromptCommit(cTypes, commit), tea.WithAltScreen())
 		if _, err := p.Run(); err != nil {
 			fmt.Println("An unexpected error:", err)
 			os.Exit(1)
@@ -70,7 +79,7 @@ func init() {
 	rootCmd.Flags().StringVarP(&conventionType,
 		"type-list",
 		"l",
-		"conventionalcommit",
+		"angular",
 		"accepts either 'angular' or 'conventionalcommit'")
 	rootCmd.Flags().BoolVarP(&dryRun,
 		"dry-run",

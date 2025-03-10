@@ -13,6 +13,16 @@ func TestCommitString(t *testing.T) {
 		expected string
 	}{
 		{
+			name: "empty",
+			commit: Commit{
+				Type: CommitTypeFeat,
+				Scope: "",
+				Description: "",
+				IsBreakingChange: false,
+			},
+			expected: "",
+		},
+		{
 			name: "no scope",
 			commit: Commit{
 				Type:             CommitTypeFeat,
