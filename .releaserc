@@ -3,14 +3,11 @@
   "plugins": [
     "@semantic-release/commit-analyzer",
     {
-        "preset": "conventionalcommits",
-        "releaseRules": [
-            { "type": "fix", "release": "patch" }
-        ]
+        "preset": "angular"
     },
     "@semantic-release/release-notes-generator",
     {
-        "preset": "conventionalcommits"
+        "preset": "angular"
     },
     [
         "@semantic-release/changelog",
