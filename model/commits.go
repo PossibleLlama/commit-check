@@ -50,6 +50,9 @@ type Commit struct {
 }
 
 func (c Commit) String() string {
+	if strings.TrimSpace(c.Description) == "" {
+		return ""
+	}
 	if c.Scope != "" {
 		c.Scope = "(" + c.Scope + ")"
 	}
