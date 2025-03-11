@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/PossibleLlama/commit-check/compare/v1.3.0...v1.3.1) (2025-03-11)
+
+
+### Bug Fixes
+
+* Use official angular commit types ([54d9595](https://github.com/PossibleLlama/commit-check/commit/54d95957716a9e077e27abc11e0e425121e88b13))
+
 # [1.3.0](https://github.com/PossibleLlama/commit-check/compare/v1.2.2...v1.3.0) (2025-02-28)
 
 
