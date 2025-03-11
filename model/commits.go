@@ -12,33 +12,36 @@ func (c CommitType) String() string {
 }
 
 const (
-	CommitTypeFix      CommitType = "fix"
-	CommitTypeFeat     CommitType = "feat"
-	CommitTypeDocs     CommitType = "docs"
-	CommitTypeStyle    CommitType = "style"
-	CommitTypeRefactor CommitType = "refactor"
-	CommitTypePerf     CommitType = "perf"
-	CommitTypeTest     CommitType = "test"
+	CommitTypeBuild    CommitType = "build"
 	CommitTypeChore    CommitType = "chore"
+	CommitTypeCI       CommitType = "ci"
+	CommitTypeDocs     CommitType = "docs"
+	CommitTypeFeat     CommitType = "feat"
+	CommitTypeFix      CommitType = "fix"
+	CommitTypePerf     CommitType = "perf"
+	CommitTypeRefactor CommitType = "refactor"
+	CommitTypeStyle    CommitType = "style"
+	CommitTypeTest     CommitType = "test"
 )
 
 var (
 	// Based on https://www.conventionalcommits.org/
-	// TODO allow config to choose between these lists
 	TypeConventionalCommit []CommitType = []CommitType{
-		CommitTypeFix,
 		CommitTypeFeat,
+		CommitTypeFix,
 	}
-	// Based on https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#type
+
+	// Based on https://github.com/angular/angular/blob/main/contributing-docs/commit-message-guidelines.md
 	TypeAngular []CommitType = []CommitType{
-		CommitTypeFix,
-		CommitTypeFeat,
+		CommitTypeBuild,
+		CommitTypeCI,
 		CommitTypeDocs,
-		CommitTypeStyle,
-		CommitTypeRefactor,
+		CommitTypeFeat,
+		CommitTypeFix,
 		CommitTypePerf,
+		CommitTypeRefactor,
+		CommitTypeStyle,
 		CommitTypeTest,
-		CommitTypeChore,
 	}
 )
 
