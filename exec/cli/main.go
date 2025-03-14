@@ -8,6 +8,7 @@ import (
 	"github.com/PossibleLlama/commit-check/model"
 	"github.com/PossibleLlama/commit-check/prompt"
 	tea "github.com/charmbracelet/bubbletea"
+	gogit "github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -56,7 +57,7 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if err := gitCommitOs(commit); err != nil {
+		if err := gitCommitGoGit(commit); err != nil {
 			fmt.Println(err.Error())
 		}
 	},
@@ -108,5 +109,44 @@ func gitCommitOs(commit *model.Commit) error {
 			fmt.Println(string(osCmdOutput))
 		}
 	}
+	return nil
+}
+
+func gitCommitGoGit(commit *model.Commit) error {
+	var err error
+	var dir string
+
+	// Get current directory of the running binary
+	dir, err = os.Getwd()
+	if err != nil {
+		return err
+	}
+
+	// Open the git repository
+	var repo *gogit.Repository
+	repo, err = gogit.PlainOpenWithOptions(
+		dir,
+		&gogit.PlainOpenOptions{
+			DetectDotGit:          true,
+			EnableDotGitCommonDir: true,
+		},
+	)
+	if err != nil {
+		return err
+	}
+
+	// Create a new worktree
+	var worktree *gogit.Worktree
+	worktree, err = repo.Worktree()
+	if err != nil {
+		return err
+	}
+
+	// Commit changes
+	_, err = worktree.Commit(commit.String(), &gogit.CommitOptions{})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
