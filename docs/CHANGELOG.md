@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/PossibleLlama/commit-check/compare/v1.3.1...v1.4.0) (2025-03-14)
+
+
+### Bug Fixes
+
+* Dry run across any version and print output ([975e3e2](https://github.com/PossibleLlama/commit-check/commit/975e3e2baa5eedca22f8ff0e9bad06b00d08db99))
+* Use os git at end to ensure default git configurations are applied ([0a9d93e](https://github.com/PossibleLlama/commit-check/commit/0a9d93e84843bb84fe8d7d99eff563062dffb9c5))
+
+
+### Features
+
+* Use gogit instead of running os commands ([b62396b](https://github.com/PossibleLlama/commit-check/commit/b62396b0e881bcec45eff304290fd7b82b6fa66b))
+
 ## [1.3.1](https://github.com/PossibleLlama/commit-check/compare/v1.3.0...v1.3.1) (2025-03-11)
 
 
