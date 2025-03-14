@@ -15,9 +15,9 @@ func TestCommitString(t *testing.T) {
 		{
 			name: "empty",
 			commit: Commit{
-				Type: CommitTypeFeat,
-				Scope: "",
-				Description: "",
+				Type:             CommitTypeFeat,
+				Scope:            "",
+				Description:      "",
 				IsBreakingChange: false,
 			},
 			expected: "",
