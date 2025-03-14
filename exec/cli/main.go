@@ -57,8 +57,12 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		if err := gitCommitGoGit(commit); err != nil {
-			fmt.Println(err.Error())
+		if dryRun || !commit.IsValid() {
+			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", commit.String())
+		} else {
+			if err := gitCommitGoGit(commit); err != nil {
+				fmt.Println(err.Error())
+			}
 		}
 	},
 	Version: VERSION,
@@ -96,18 +100,14 @@ func initConfig() {
 }
 
 func gitCommitOs(commit *model.Commit) error {
-	if dryRun || !commit.IsValid() {
-		fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", commit.String())
-	} else {
-		//#nosec G204 -- The point of this app is to run git commands
-		runOsCmd := exec.Command("git", "commit", "-m", commit.String())
+	//#nosec G204 -- The point of this app is to run git commands
+	runOsCmd := exec.Command("git", "commit", "-m", commit.String())
 
-		osCmdOutput, runErr := runOsCmd.CombinedOutput()
-		if runErr != nil {
-			return fmt.Errorf("Did not commit changes due to git error.\n%s", osCmdOutput)
-		} else {
-			fmt.Println(string(osCmdOutput))
-		}
+	osCmdOutput, runErr := runOsCmd.CombinedOutput()
+	if runErr != nil {
+		return fmt.Errorf("Did not commit changes due to git error.\n%s", osCmdOutput)
+	} else {
+		fmt.Println(string(osCmdOutput))
 	}
 	return nil
 }
@@ -149,10 +149,14 @@ func gitCommitGoGit(commit *model.Commit) error {
 	}
 
 	// Commit via os so that signing and other git hooks can be used
+	//#nosec G204 -- This is not editable by the user
 	runOsCmd := exec.Command("git", "commit", "--amend", "--no-edit")
-	_, err = runOsCmd.CombinedOutput()
+	var osCmdOutput []byte
+	osCmdOutput, err = runOsCmd.CombinedOutput()
 	if err != nil {
 		return err
+	} else {
+		fmt.Println(string(osCmdOutput))
 	}
 
 	return nil
