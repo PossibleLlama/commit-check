@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
 	"github.com/PossibleLlama/commit-check/model"
 	"github.com/PossibleLlama/commit-check/prompt"
@@ -57,19 +56,8 @@ var rootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		commitArgs := []string{"commit", "-m", commit.String()}
-		if dryRun || !commit.IsValid() {
-			fmt.Println("git", strings.Join(commitArgs, " "))
-		} else {
-			//#nosec G204 -- The point of this app is to run git commands
-			runOsCmd := exec.Command("git", commitArgs...)
-
-			osCmdOutput, runErr := runOsCmd.CombinedOutput()
-			if runErr != nil {
-				fmt.Println("failed to commit with error:", string(osCmdOutput))
-				os.Exit(1)
-			}
-			fmt.Println(string(osCmdOutput))
+		if err := gitCommitOs(commit); err != nil {
+			fmt.Println(err.Error())
 		}
 	},
 	Version: VERSION,
@@ -104,4 +92,21 @@ func initConfig() {
 	if err := viper.ReadInConfig(); err != nil {
 		fmt.Printf("unable to use config file: '%s'. %s", viper.ConfigFileUsed(), err.Error())
 	}
+}
+
+func gitCommitOs(commit *model.Commit) error {
+	if dryRun || !commit.IsValid() {
+		fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", commit.String())
+	} else {
+		//#nosec G204 -- The point of this app is to run git commands
+		runOsCmd := exec.Command("git", "commit", "-m", commit.String())
+
+		osCmdOutput, runErr := runOsCmd.CombinedOutput()
+		if runErr != nil {
+			return fmt.Errorf("Did not commit changes due to git error.\n%s", osCmdOutput)
+		} else {
+			fmt.Println(string(osCmdOutput))
+		}
+	}
+	return nil
 }
