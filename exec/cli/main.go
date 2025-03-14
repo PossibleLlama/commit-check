@@ -99,19 +99,6 @@ func initConfig() {
 	}
 }
 
-func gitCommitOs(commit *model.Commit) error {
-	//#nosec G204 -- The point of this app is to run git commands
-	runOsCmd := exec.Command("git", "commit", "-m", commit.String())
-
-	osCmdOutput, runErr := runOsCmd.CombinedOutput()
-	if runErr != nil {
-		return fmt.Errorf("Did not commit changes due to git error.\n%s", osCmdOutput)
-	} else {
-		fmt.Println(string(osCmdOutput))
-	}
-	return nil
-}
-
 func gitCommitGoGit(commit *model.Commit) error {
 	var err error
 	var dir string
@@ -148,7 +135,7 @@ func gitCommitGoGit(commit *model.Commit) error {
 		return err
 	}
 
-	// Commit via os so that signing and other git hooks can be used
+	// Commit via os so that signing and other git hooks can be used as gogit doesnt pick up on this configuration
 	//#nosec G204 -- This is not editable by the user
 	runOsCmd := exec.Command("git", "commit", "--amend", "--no-edit")
 	var osCmdOutput []byte
