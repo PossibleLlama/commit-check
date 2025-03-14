@@ -148,5 +148,12 @@ func gitCommitGoGit(commit *model.Commit) error {
 		return err
 	}
 
+	// Commit via os so that signing and other git hooks can be used
+	runOsCmd := exec.Command("git", "commit", "--amend", "--no-edit")
+	_, err = runOsCmd.CombinedOutput()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
