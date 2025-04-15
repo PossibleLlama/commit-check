@@ -4,9 +4,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/PossibleLlama/commit-check/model"
-	"github.com/PossibleLlama/commit-check/prompt"
+	"github.com/PossibleLlama/commit-check/tui"
 	tea "github.com/charmbracelet/bubbletea"
 	gogit "github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
@@ -50,15 +51,18 @@ var rootCmd = &cobra.Command{
 		}
 
 		commit := &model.Commit{}
+		commit.DryRun(dryRun)
+		// TODO, remove this once testing is finished
+		commit.Quit(true)
 
-		p := tea.NewProgram(prompt.NewPromptCommit(cTypes, commit), tea.WithAltScreen())
+		p := tea.NewProgram(tui.NewCommitSummary(commit, cTypes), tea.WithAltScreen())
 		if _, err := p.Run(); err != nil {
 			fmt.Println("An unexpected error:", err)
 			os.Exit(1)
 		}
 
-		if dryRun || !commit.IsValid() {
-			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", commit.String())
+		if !commit.IsCommittable() || commit.HasQuit() {
+			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", strings.ReplaceAll(commit.String(), "\n", "\" -m \""))
 		} else {
 			if err := gitCommitGoGit(commit); err != nil {
 				fmt.Println(err.Error())
