@@ -242,8 +242,8 @@ func (s *Summary) View() string {
 			{Title: "(t)ype", Width: 10},
 			{Title: "(s)cope", Width: 10},
 			{Title: "(d)escription", Width: 40},
-			{Title: "(b)reaking Changes", Width: 18},
-			{Title: "(D)ry Run", Width: 10},
+			{Title: "(b)reaking change", Width: 18},
+			{Title: "(D)ry run", Width: 10},
 		}
 		rows := []table.Row{
 			{
