@@ -52,8 +52,6 @@ var rootCmd = &cobra.Command{
 
 		commit := &model.Commit{}
 		commit.DryRun(dryRun)
-		// TODO, remove this once testing is finished
-		commit.Quit(true)
 
 		p := tea.NewProgram(tui.NewCommitSummary(commit, cTypes), tea.WithAltScreen())
 		if _, err := p.Run(); err != nil {
