@@ -70,7 +70,6 @@ func NewCommitSummary(cmt *model.Commit, commitTypes []model.CommitType) *Summar
 	cTypeList.SetShowTitle(false)
 	cTypeList.SetShowPagination(false)
 
-	// TODO, how to get this set?
 	cScope := []list.Item{
 		model.ScopeItem{ID: "None", Body: "No scope"},
 		model.ScopeItem{ID: "Other", Body: "Manual input"},
@@ -230,6 +229,7 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		for _, item := range msg {
 			cmd = s.cScopeList.InsertItem(0, item)
 		}
+		s.cScopeList.SetHeight(len(msg) + s.cScopeList.Height())
 	}
 	return s, cmd
 }
