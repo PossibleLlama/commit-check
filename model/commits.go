@@ -50,6 +50,9 @@ type Commit struct {
 	Scope            string
 	Description      string
 	IsBreakingChange bool
+	dryRun           bool
+
+	quit bool // This is used to quit the program. TODO, find a more elegant way to do this
 }
 
 func (c Commit) String() string {
@@ -61,11 +64,41 @@ func (c Commit) String() string {
 	}
 	s := fmt.Sprintf("%s%s: %s", c.Type, c.Scope, strings.TrimSpace(c.Description))
 	if c.IsBreakingChange {
-		s += "\n\nBREAKING CHANGE"
+		s += "\nBREAKING CHANGE"
 	}
 	return s
 }
 
-func (c Commit) IsValid() bool {
-	return c.Type != "" && len(strings.TrimSpace(c.Description)) > 3
+func (c Commit) IsCommittable() bool {
+	return c.Type != "" && len(strings.TrimSpace(c.Description)) > 3 && !c.dryRun
+}
+
+func (c Commit) IsCommittableReason() []string {
+	reasons := []string{}
+	if c.Type == "" {
+		reasons = append(reasons, "Type is empty")
+	}
+	if len(strings.TrimSpace(c.Description)) < 3 {
+		reasons = append(reasons, "Description is too short")
+	}
+	if c.dryRun {
+		reasons = append(reasons, "Dry run is set")
+	}
+	return reasons
+}
+
+func (c *Commit) Quit(q bool) {
+	c.quit = q
+}
+
+func (c Commit) HasQuit() bool {
+	return c.quit
+}
+
+func (c *Commit) DryRun(d bool) {
+	c.dryRun = d
+}
+
+func (c Commit) IsDryRun() bool {
+	return c.dryRun
 }
