@@ -5,11 +5,13 @@ import (
 	"strings"
 
 	"github.com/PossibleLlama/commit-check/model"
+	"github.com/PossibleLlama/commit-check/plugins"
 	"github.com/charmbracelet/bubbles/list"
 	"github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/bubbles/textarea"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/spf13/viper"
 )
 
 // Which section of the view we're on
@@ -70,10 +72,10 @@ func NewCommitSummary(cmt *model.Commit, commitTypes []model.CommitType) *Summar
 
 	// TODO, how to get this set?
 	cScope := []list.Item{
-		simpleListItem("No scope"),
-		simpleListItem("Manual input"),
+		model.ScopeItem{ID: "None", Body: "No scope"},
+		model.ScopeItem{ID: "Other", Body: "Manual input"},
 	}
-	cScopeList := list.New(cScope, simpleSelectableListItemFormatter{}, 60, 2)
+	cScopeList := list.New(cScope, scopeSelectableListItemFormatter{}, 60, len(cScope))
 	cScopeList.SetShowStatusBar(false)
 	cScopeList.SetShowHelp(false)
 	cScopeList.SetShowFilter(false)
@@ -93,7 +95,33 @@ func NewCommitSummary(cmt *model.Commit, commitTypes []model.CommitType) *Summar
 }
 
 func (s *Summary) Init() tea.Cmd {
-	return tea.SetWindowTitle("commit-check")
+	pluginSources := []plugins.Plugin{}
+	if viper.Sub("plugins.clickup") != nil {
+		p := plugins.NewClickup()
+		err := p.Init()
+		if err == nil {
+			pluginSources = append(pluginSources, p)
+		}
+		// TODO, log error
+	}
+	if viper.Sub("plugins.jira") != nil {
+		p := plugins.NewJira()
+		err := p.Init()
+		if err == nil {
+			pluginSources = append(pluginSources, p)
+		}
+		// TODO, log error
+	}
+
+	msgs := []tea.Cmd{
+		tea.SetWindowTitle("commit-check"),
+	}
+	for _, p := range pluginSources {
+		msgs = append(msgs, p.ListCards)
+	}
+	return tea.Batch(
+		msgs...,
+	)
 }
 
 func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -164,15 +192,23 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			} else { // List input
 				switch msg.String() {
 				case "enter":
-					if s.cScopeList.Cursor() == 0 { // No scope
+					selectedScope := s.cScopeList.SelectedItem().(model.ScopeItem)
+					switch selectedScope.ID {
+					case "None":
+						// No scope
 						s.cmt.Scope = ""
 						s.text.Reset()
 						s.text.Blur()
 						s.state = summaryState
-					} else if s.cScopeList.Cursor() == 1 { // Manual input
+					case "Other":
+						// Manual input
 						s.text.Placeholder = "Enter scope of change"
 						s.text.Focus()
 						s.text.SetValue(s.cmt.Scope)
+					default:
+						// From a plugin
+						s.cmt.Scope = selectedScope.ID
+						s.state = summaryState
 					}
 				case "up", "down", "j", "k":
 					s.cScopeList, cmd = s.cScopeList.Update(msg)
@@ -189,6 +225,10 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				s.text, cmd = s.text.Update(msg)
 				return s, cmd
 			}
+		}
+	case []model.ScopeItem:
+		for _, item := range msg {
+			cmd = s.cScopeList.InsertItem(0, item)
 		}
 	}
 	return s, cmd
