@@ -216,12 +216,9 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		// Description page
 		case descriptionState:
 			switch msg.String() {
-			case "enter":
-				s.cmt.Description = s.text.Value()
-				s.text.Reset()
-				s.state = summaryState
 			default:
 				s.text, cmd = s.text.Update(msg)
+				s.cmt.Description = strings.TrimSpace(s.text.Value())
 				return s, cmd
 			}
 		}
