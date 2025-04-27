@@ -69,6 +69,19 @@ func (c Commit) String() string {
 	return s
 }
 
+func (c Commit) CommitStrings() []string {
+	allCommitStrings := strings.Split(c.String(), "\n")
+	commitStrings := []string{}
+
+	for _, s := range allCommitStrings {
+		if strings.TrimSpace(s) == "" {
+			continue
+		}
+		commitStrings = append(commitStrings, strings.TrimSpace(s))
+	}
+	return commitStrings
+}
+
 func (c Commit) IsCommittable() bool {
 	return c.Type != "" && len(strings.TrimSpace(c.Description)) > 3 && !c.dryRun
 }

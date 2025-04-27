@@ -60,7 +60,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		if !commit.IsCommittable() || commit.HasQuit() {
-			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", strings.ReplaceAll(commit.String(), "\n", "\" -m \""))
+			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", strings.ReplaceAll(strings.Join(commit.CommitStrings(), "\n"), "\n", "\" -m \""))
 		} else {
 			if err := gitCommitGoGit(commit); err != nil {
 				fmt.Println(err.Error())
@@ -132,7 +132,7 @@ func gitCommitGoGit(commit *model.Commit) error {
 	}
 
 	// Commit changes
-	_, err = worktree.Commit(commit.String(), &gogit.CommitOptions{})
+	_, err = worktree.Commit(strings.Join(commit.CommitStrings(), "\n"), &gogit.CommitOptions{})
 	if err != nil {
 		return err
 	}
