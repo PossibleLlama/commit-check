@@ -204,6 +204,7 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						s.text.Placeholder = "Enter scope of change"
 						s.text.Focus()
 						s.text.SetValue(s.cmt.Scope)
+						s.text.MaxHeight = 1
 					default:
 						// From a plugin
 						s.cmt.Scope = selectedScope.ID
@@ -218,6 +219,7 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			switch msg.String() {
 			default:
 				s.text, cmd = s.text.Update(msg)
+				s.text.MaxHeight = countLines(s.text.Value())
 				s.cmt.Description = strings.TrimSpace(s.text.Value())
 				return s, cmd
 			}
@@ -316,4 +318,8 @@ func StringToStringOrDash(s string) string {
 		return "-"
 	}
 	return strings.TrimSpace(s)
+}
+
+func countLines(s string) int {
+	return len(strings.Split(s, "\n"))
 }
