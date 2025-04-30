@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/PossibleLlama/commit-check/model"
@@ -60,7 +61,11 @@ var rootCmd = &cobra.Command{
 		}
 
 		if !commit.IsCommittable() || commit.HasQuit() {
-			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit -m \"%s\"\n", strings.ReplaceAll(strings.Join(commit.CommitStrings(), "\n"), "\n", "\" -m \""))
+			escapedMessages := make([]string, len(commit.CommitStrings()))
+			for i, msg := range commit.CommitStrings() {
+				escapedMessages[i] = strconv.Quote(msg)
+			}
+			fmt.Printf("Did not commit changes. This would have been the command.\ngit commit %s\n", strings.Join(escapedMessages, " -m "))
 		} else {
 			if err := gitCommitGoGit(commit); err != nil {
 				fmt.Println(err.Error())
