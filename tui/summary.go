@@ -56,8 +56,9 @@ type Summary struct {
 
 func NewCommitSummary(cmt *model.Commit, commitTypes []model.CommitType) *Summary {
 	ta := textarea.New()
-	ta.SetPromptFunc(1, func(lineIdx int) string { return cursor })
 	ta.SetWidth(30)
+	ta.SetCursor(-1)
+	ta.ShowLineNumbers = false
 
 	cType := []list.Item{}
 	for _, c := range commitTypes {
@@ -114,6 +115,7 @@ func (s *Summary) Init() tea.Cmd {
 
 	msgs := []tea.Cmd{
 		tea.SetWindowTitle("commit-check"),
+		textarea.Blink,
 	}
 	for _, p := range pluginSources {
 		msgs = append(msgs, p.ListCards)
@@ -160,6 +162,7 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				s.text.Placeholder = "Enter description"
 				s.text.Focus()
 				s.text.SetValue(s.cmt.Description)
+				s.text.SetHeight(countLines(s.cmt.Description) + 1)
 			case "b":
 				s.cmt.IsBreakingChange = !s.cmt.IsBreakingChange
 			case "D":
@@ -204,7 +207,7 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 						s.text.Placeholder = "Enter scope of change"
 						s.text.Focus()
 						s.text.SetValue(s.cmt.Scope)
-						s.text.MaxHeight = 1
+						s.text.SetHeight(1)
 					default:
 						// From a plugin
 						s.cmt.Scope = selectedScope.ID
@@ -216,13 +219,10 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 		// Description page
 		case descriptionState:
-			switch msg.String() {
-			default:
-				s.text, cmd = s.text.Update(msg)
-				s.text.MaxHeight = countLines(s.text.Value())
-				s.cmt.Description = strings.TrimSpace(s.text.Value())
-				return s, cmd
-			}
+			s.text, cmd = s.text.Update(msg)
+			s.text.SetHeight(countLines(s.text.Value()) + 1)
+			s.cmt.Description = s.text.Value()
+			return s, cmd
 		}
 	case []model.ScopeItem:
 		for _, item := range msg {
@@ -292,12 +292,12 @@ func (s *Summary) View() string {
 		v = fmt.Sprintf("Type:\n%s", s.cTypeList.View())
 	case scopeState:
 		if s.text.Focused() {
-			v = fmt.Sprintf("Scope:\n%s", s.text.Value())
+			v = fmt.Sprintf("Scope:\n%s", s.text.View())
 		} else {
 			v = fmt.Sprintf("Scope:\n%s", s.cScopeList.View())
 		}
 	case descriptionState:
-		v = fmt.Sprintf("Description:\n%s", s.text.Value())
+		v = fmt.Sprintf("Description:\n%s", s.text.View())
 	case helpState:
 		v = helpText
 	default:
