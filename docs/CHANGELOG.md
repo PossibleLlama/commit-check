@@ -1,3 +1,21 @@
+# [1.5.0](https://github.com/PossibleLlama/commit-check/compare/v1.4.0...v1.5.0) (2025-04-30)
+
+
+### Bug Fixes
+
+* **86983pcud:** Escape characters ([aefb282](https://github.com/PossibleLlama/commit-check/commit/aefb2823edd790064c1938cca83395a7a4eacaa6))
+* **86983pcud:** Remove prevention of committing changes ([7717ef4](https://github.com/PossibleLlama/commit-check/commit/7717ef403cacebf576ce9b814000b7b36da781a1))
+* **86983pcud:** Set description using text area correctly ([58291b4](https://github.com/PossibleLlama/commit-check/commit/58291b499c84d33869806fc8d5f887856e2bf1d0))
+* **86983pcud:** Set height of scope after update ([9403b6f](https://github.com/PossibleLlama/commit-check/commit/9403b6f82d190bf79b84da6592fa875993d49706))
+
+
+### Features
+
+* **86983pcud:** Add adjustable heights for description boxes ([63ef765](https://github.com/PossibleLlama/commit-check/commit/63ef76514ccb43c17bae76fd893a36557c3a3ae0))
+* **86983pcud:** Have a multiline description ([b82e524](https://github.com/PossibleLlama/commit-check/commit/b82e524dbe204d93a4b392bdd5a722fdb1481697))
+* **86983pcud:** Pull in scopes from plugins ([13090ad](https://github.com/PossibleLlama/commit-check/commit/13090ad754e78040ca013afb1e820978776a49e2))
+* **86983pcud:** Rewrite how the TUI flows ([dd89be7](https://github.com/PossibleLlama/commit-check/commit/dd89be76c66711c3695a0f37b828e1737701edea))
+
 # [1.4.0](https://github.com/PossibleLlama/commit-check/compare/v1.3.1...v1.4.0) (2025-03-14)
 
 
