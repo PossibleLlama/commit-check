@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/PossibleLlama/commit-check/compare/v1.5.0...v1.5.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* Use CGO_ENABLED ([e11b488](https://github.com/PossibleLlama/commit-check/commit/e11b488e92125d3829524615ac7c6cbbd244214c))
+
 # [1.5.0](https://github.com/PossibleLlama/commit-check/compare/v1.4.0...v1.5.0) (2025-04-30)
 
 
