@@ -15,23 +15,30 @@ Enter
 
 # Select type
 Sleep 500ms
+Type "t"
+Sleep 500ms
 Down
 Sleep 1s
 Enter
 
 # Select scope
+Type "s"
+Sleep 500ms
+Down
+Sleep 500ms
+Enter
+Type "CORE-123"
 Sleep 1s
 Enter
 
 # Add description
 Sleep 500ms
-Type "Fixed the bug"
-Sleep 500ms
-Enter
+Type "d"
+Type "Improved compile time"
 Sleep 1s
-Enter
+Escape
 
-# Select breaking change confirmation
+# Confirmation
 Sleep 1s
 Enter
 
