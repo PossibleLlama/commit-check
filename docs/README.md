@@ -11,9 +11,9 @@ use the same commit structure.
 
 ## Usage
 
-<img alt="Example usage of commit-check" src="examples/basic.gif" width="600" />
-
-The application will prompt you for inputs at each point.
+The application will show you the output, and let you input each part
+such as the type of commit, what the scope of changes is, and a description
+of the changes.
 Anything added as arguments will be ignored.
 
 ``` bash
@@ -32,9 +32,16 @@ commit-check -l angular
 commit-check --type-list conventionalcommit
 ```
 
-You can also add `--dry-run` flag, or shorthand of `-d`.
+The scope can either be ignored, a manual entry be made, or (if you have
+setup the configuration for it) a list of items from Jira and/or Clickup
+with their IDs shown.
+This can let you look at a list of scopes for changes that you are working
+on, and quickly select from the most likely ones, or add in a value
+yourself if the one you want isnt present.
 
-<img alt="Example usage of commit-check with all arguments" src="examples/dry-run.gif" width="600" />
+You can also add `--dry-run` flag, or shorthand of `-d`.
+When the application is running, on the summary page, pressing `D` will
+toggle whether dry run is enabled or not.
 
 ## Configuration
 
