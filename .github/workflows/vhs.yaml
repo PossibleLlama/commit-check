@@ -7,7 +7,6 @@ on:
 jobs:
   artifact-vhs:
     name: "Create VHS artifact"
-    if: false # Wait for https://github.com/charmbracelet/vhs-action/issues/459
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -22,7 +21,9 @@ jobs:
           go-version-file: "./go.mod"
 
       - name: Get dependencies
-        run: go mod download
+        run: |
+          go mod download
+          sudo apt install ffmpeg
 
       - name: Install binary
         run: |
@@ -32,7 +33,6 @@ jobs:
       - name: Setup demo repository
         run: |
           echo -e "Hide\nType \"cd ../demo && clear\"\nEnter\nShow\n$(cat $PWD/docs/basic.tape)" > $PWD/docs/basic.tape
-          echo -e "Hide\nType \"cd ../demo && clear\"\nEnter\nShow\n$(cat $PWD/docs/dry-run.tape)" > $PWD/docs/dry-run.tape
           mkdir ../demo
           cd ../demo
           git init --initial-branch=main
@@ -41,15 +41,13 @@ jobs:
           touch demo.txt
           git add demo.txt
 
-      - name: Generate basic
+      - name: Install VHS
         uses: charmbracelet/vhs-action@v2
-        with:
-          path: "docs/basic.tape"
 
-      - name: Generate dry run
-        uses: charmbracelet/vhs-action@v2
-        with:
-          path: "docs/dry-run.tape"
+      - name: Record tapes
+        run: |
+          vhs basic.tape
+        working-directory: docs
 
       - name: Commit back changes
         run: |
