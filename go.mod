@@ -3,7 +3,7 @@ module github.com/PossibleLlama/commit-check
 go 1.24.1
 
 require (
-	github.com/charmbracelet/bubbletea v1.3.9
+	github.com/charmbracelet/bubbletea v1.3.10
 	github.com/charmbracelet/lipgloss v1.1.0
 	github.com/go-git/go-git/v5 v5.16.2
 	github.com/raksul/go-clickup v0.0.0-20231004134427-f652c5d0a915
@@ -58,7 +58,7 @@ require (
 )
 
 require (
-	github.com/andygrunwald/go-jira v1.16.1
+	github.com/andygrunwald/go-jira v1.17.0
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect
 	github.com/charmbracelet/bubbles v0.21.0
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
