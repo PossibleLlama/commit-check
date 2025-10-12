@@ -4,6 +4,7 @@
 *.out
 *.pem
 *.log
+main
 
 coverage.txt
 dist/*
