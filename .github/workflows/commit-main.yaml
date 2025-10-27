@@ -61,7 +61,7 @@ jobs:
         node-version: "lts/*"
 
     - name: Download app
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@v6
       with:
         path: .
 
