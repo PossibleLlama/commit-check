@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/PossibleLlama/commit-check/compare/v1.5.1...v1.5.2) (2025-12-15)
+
+
+### Bug Fixes
+
+* Remove additional breaks ([4bfa963](https://github.com/PossibleLlama/commit-check/commit/4bfa96370d4f001d1fbdf6e85643ee1022347b01))
+
 ## [1.5.1](https://github.com/PossibleLlama/commit-check/compare/v1.5.0...v1.5.1) (2025-04-30)
 
 
