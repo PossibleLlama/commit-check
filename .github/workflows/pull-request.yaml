@@ -13,6 +13,6 @@ permissions: read-all
 jobs:
   security:
     name: Security checks
-    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.2.20
+    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.2.21
     with:
       upload-sarif: false

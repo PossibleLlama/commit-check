@@ -20,7 +20,7 @@ jobs:
         goarch:
           - amd64
           - arm64
-    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.20
+    uses: PossibleLlama/workflows/.github/workflows/golang-binary.yaml@v0.2.21
     permissions:
       id-token: write
       contents: read
@@ -37,7 +37,7 @@ jobs:
     name: Security checks
     permissions:
       security-events: write
-    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.2.20
+    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.2.21
     with:
       upload-sarif: true
 
@@ -61,7 +61,7 @@ jobs:
         node-version: "lts/*"
 
     - name: Download app
-      uses: actions/download-artifact@v6
+      uses: actions/download-artifact@v7
       with:
         path: .
 
