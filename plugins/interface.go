@@ -3,7 +3,7 @@ package plugins
 import (
 	"errors"
 
-	tea "github.com/charmbracelet/bubbletea"
+	tea "charm.land/bubbletea/v2"
 )
 
 type Plugin interface {

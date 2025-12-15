@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/PossibleLlama/commit-check/model"
-	tea "github.com/charmbracelet/bubbletea"
 	"github.com/raksul/go-clickup/clickup"
 	"github.com/spf13/viper"
 )
