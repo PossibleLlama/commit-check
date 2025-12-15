@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"strings"
 
+	"charm.land/bubbles/v2/list"
+	"charm.land/bubbles/v2/table"
+	"charm.land/bubbles/v2/textarea"
+	tea "charm.land/bubbletea/v2"
+	"charm.land/lipgloss/v2"
 	"github.com/PossibleLlama/commit-check/model"
 	"github.com/PossibleLlama/commit-check/plugins"
-	"github.com/charmbracelet/bubbles/list"
-	"github.com/charmbracelet/bubbles/table"
-	"github.com/charmbracelet/bubbles/textarea"
-	tea "github.com/charmbracelet/bubbletea"
-	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/viper"
 )
 
@@ -57,7 +57,6 @@ type Summary struct {
 func NewCommitSummary(cmt *model.Commit, commitTypes []model.CommitType) *Summary {
 	ta := textarea.New()
 	ta.SetWidth(30)
-	ta.SetCursor(-1)
 	ta.ShowLineNumbers = false
 
 	cType := []list.Item{}
@@ -114,7 +113,6 @@ func (s *Summary) Init() tea.Cmd {
 	}
 
 	msgs := []tea.Cmd{
-		tea.SetWindowTitle("commit-check"),
 		textarea.Blink,
 	}
 	for _, p := range pluginSources {
@@ -132,15 +130,16 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		s.text.SetWidth(msg.Width - focusedStyle.GetBorderLeftSize() - focusedStyle.GetBorderRightSize())
 		s.text.SetHeight(msg.Height - focusedStyle.GetBorderTopSize() - focusedStyle.GetBorderBottomSize())
 	case tea.KeyMsg:
+		key := msg.Key()
 		// Global keybindings
-		switch msg.String() {
-		case tea.KeyEsc.String():
+		switch {
+		case key.Code == tea.KeyEscape:
 			if s.state != summaryState {
 				s.state = summaryState
 				return s, nil
 			}
 			fallthrough
-		case tea.KeyCtrlC.String():
+		case key.Code == 'c' && key.Mod == tea.ModCtrl:
 			s.cmt.Quit(true)
 			return s, tea.Quit
 		}
@@ -233,7 +232,7 @@ func (s *Summary) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return s, cmd
 }
 
-func (s *Summary) View() string {
+func (s *Summary) View() tea.View {
 	var v string
 	switch s.state {
 	case summaryState:
@@ -303,7 +302,10 @@ func (s *Summary) View() string {
 	default:
 		v = "loading"
 	}
-	return focusedStyle.Render(v) + "\n\n" + defaultStyle.Render(footerText)
+	view := tea.NewView(focusedStyle.Render(v) + "\n\n" + defaultStyle.Render(footerText))
+	view.WindowTitle = "commit-check"
+	view.AltScreen = true
+	return view
 }
 
 func BoolToYesNo(b bool) string {

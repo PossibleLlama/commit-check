@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
+	tea "charm.land/bubbletea/v2"
 	"github.com/PossibleLlama/commit-check/model"
 	"github.com/PossibleLlama/commit-check/tui"
-	tea "github.com/charmbracelet/bubbletea"
 	gogit "github.com/go-git/go-git/v5"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -52,7 +52,7 @@ var rootCmd = &cobra.Command{
 		commit := &model.Commit{}
 		commit.DryRun(dryRun)
 
-		p := tea.NewProgram(tui.NewCommitSummary(commit, cTypes), tea.WithAltScreen())
+		p := tea.NewProgram(tui.NewCommitSummary(commit, cTypes))
 		if _, err := p.Run(); err != nil {
 			fmt.Println("An unexpected error:", err)
 			os.Exit(1)
