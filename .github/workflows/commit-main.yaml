@@ -33,14 +33,6 @@ jobs:
       retention-days: 30
       attestation: true
 
-  security:
-    name: Security checks
-    permissions:
-      security-events: write
-    uses: PossibleLlama/workflows/.github/workflows/golang-security.yaml@v0.2.21
-    with:
-      upload-sarif: true
-
   release:
     name: Release
     runs-on: ubuntu-latest
