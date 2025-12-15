@@ -45,10 +45,8 @@ var rootCmd = &cobra.Command{
 		switch conventionType {
 		case "angular":
 			cTypes = model.TypeAngular
-			break
 		case "conventionalcommit":
 			cTypes = model.TypeConventionalCommit
-			break
 		}
 
 		commit := &model.Commit{}
