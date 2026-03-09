@@ -1,11 +1,11 @@
 module github.com/PossibleLlama/commit-check
 
-go 1.25
+go 1.25.0
 
 require (
 	charm.land/bubbles/v2 v2.0.0
-	charm.land/bubbletea/v2 v2.0.0
-	charm.land/lipgloss/v2 v2.0.0
+	charm.land/bubbletea/v2 v2.0.2
+	charm.land/lipgloss/v2 v2.0.1
 	github.com/go-git/go-git/v5 v5.17.0
 	github.com/raksul/go-clickup v0.0.0-20231004134427-f652c5d0a915
 	github.com/spf13/cobra v1.10.2
@@ -70,7 +70,7 @@ require (
 	github.com/muesli/cancelreader v0.2.2 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
