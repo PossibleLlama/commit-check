@@ -48,8 +48,24 @@ toggle whether dry run is enabled or not.
 A configuration file can be used to set default values, and
 can be located either at `/etc/commit-check/config.yaml`, or
 `$HOME/.commit-check/config.yaml`.
-A full example can be found below.
+A guided setup can be launched via `commit-check config`.
+You can prefill values with flags, then edit and confirm in the UI.
+The command writes to `$HOME/.commit-check/config.yaml` by default,
+or a custom path with `--output`.
 
+``` bash
+commit-check config \
+  --jira-url "https://company.atlassian.net" \
+  --jira-username "yourname@company.com" \
+  --jira-api-key "0123" \
+  --jira-projects "ABC,PLAT" \
+  --jira-status "In Progress" \
+  --clickup-api-key "0123" \
+  --clickup-list-ids "123,456" \
+  --clickup-assignee "yourname@company.com"
+```
+
+A full example can be found below.
 ```yaml
 plugins:
   jira:
