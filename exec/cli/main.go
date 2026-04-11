@@ -27,6 +27,7 @@ var (
 	dryRun         bool
 
 	configOutputPath    string
+	configSkipUI        bool
 	configJiraURL       string
 	configJiraUsername  string
 	configJiraAPIKey    string
@@ -115,6 +116,15 @@ var configCmd = &cobra.Command{
 			cfg.ClickupAssignee = configClickupAssign
 		}
 
+		if configSkipUI {
+			if err := model.WriteConfigFile(configOutputPath, cfg); err != nil {
+				fmt.Println("unable to write config:", err)
+				os.Exit(1)
+			}
+			fmt.Printf("Configuration written to %s\n", configOutputPath)
+			return
+		}
+
 		p := tea.NewProgram(tui.NewConfigEditor(&cfg))
 		result, err := p.Run()
 		if err != nil {
@@ -163,6 +173,10 @@ func init() {
 		"output",
 		defaultPath,
 		"path to write the configuration file")
+	configCmd.Flags().BoolVar(&configSkipUI,
+		"skip-ui",
+		false,
+		"skip the interactive UI and write config from flags")
 	configCmd.Flags().StringVar(&configJiraURL,
 		"jira-url",
 		"",
