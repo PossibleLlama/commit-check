@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/PossibleLlama/commit-check/compare/v1.5.2...v1.5.3) (2026-04-11)
+
+
+### Bug Fixes
+
+* Remove assignees and add codeowners instead ([1573b71](https://github.com/PossibleLlama/commit-check/commit/1573b710fbc5fb873fb5ec96b930a43972a33fcb))
+
 ## [1.5.2](https://github.com/PossibleLlama/commit-check/compare/v1.5.1...v1.5.2) (2025-12-15)
 
 
