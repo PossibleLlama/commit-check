@@ -1,3 +1,16 @@
+# [1.6.0](https://github.com/PossibleLlama/commit-check/compare/v1.5.3...v1.6.0) (2026-04-13)
+
+
+### Bug Fixes
+
+* Review comments ([dd491cb](https://github.com/PossibleLlama/commit-check/commit/dd491cb72c97ff3305324a2aa318a771d27e3733))
+
+
+### Features
+
+* Add a bypass for the ui to allow it to be written straight away ([b282e6c](https://github.com/PossibleLlama/commit-check/commit/b282e6c21382372071d01b10c3124d88fa27ee9f))
+* Add a command to setup the configuration file ([972f0d9](https://github.com/PossibleLlama/commit-check/commit/972f0d994d51cc3f90017a7fb05479ef121633f2))
+
 ## [1.5.3](https://github.com/PossibleLlama/commit-check/compare/v1.5.2...v1.5.3) (2026-04-11)
 
 
