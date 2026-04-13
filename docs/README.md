@@ -72,7 +72,7 @@ plugins:
     url: "https://company.atlassian.net"
     username: "yourname@company.com"
     apiKey: "0123"
-    project:
+    projects:
       - "ABC"
     status:
       - "In Progress"

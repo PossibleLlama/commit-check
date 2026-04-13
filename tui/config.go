@@ -40,27 +40,28 @@ func NewConfigEditor(cfg *model.SetupConfig) *ConfigEditor {
 	input.SetHeight(1)
 	input.ShowLineNumbers = false
 
+	var jiraFields []model.ConfigField
+	var clickupFields []model.ConfigField
+	for _, field := range model.SetupConfigFields {
+		switch {
+		case strings.HasPrefix(field.Key, "jira."):
+			jiraFields = append(jiraFields, field)
+		case strings.HasPrefix(field.Key, "clickup."):
+			clickupFields = append(clickupFields, field)
+		}
+	}
+
 	return &ConfigEditor{
 		state: configPluginState,
 		cfg:   cfg,
 		plugins: []configPlugin{
 			{
-				Name: "Jira",
-				Fields: []model.ConfigField{
-					{Key: "jira.url", Label: "Jira URL"},
-					{Key: "jira.username", Label: "Jira Username"},
-					{Key: "jira.apiKey", Label: "Jira API Key", Secret: true},
-					{Key: "jira.projects", Label: "Jira Projects (comma separated)"},
-					{Key: "jira.status", Label: "Jira Statuses (comma separated)"},
-				},
+				Name:   "Jira",
+				Fields: jiraFields,
 			},
 			{
-				Name: "ClickUp",
-				Fields: []model.ConfigField{
-					{Key: "clickup.apiKey", Label: "ClickUp API Key", Secret: true},
-					{Key: "clickup.listIds", Label: "ClickUp List IDs (comma separated)"},
-					{Key: "clickup.assignee", Label: "ClickUp Assignee Email"},
-				},
+				Name:   "ClickUp",
+				Fields: clickupFields,
 			},
 		},
 		input: input,
