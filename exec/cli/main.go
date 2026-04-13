@@ -91,29 +91,38 @@ var configCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		cfg := model.NewSetupConfigFromViper(viper.GetString, viper.GetStringSlice)
 
+		setConfigField := func(fieldName, value string) {
+			cfg.SetFieldValue(fieldName, value)
+		}
+
 		if cmd.Flags().Changed("jira-url") {
-			cfg.JiraURL = configJiraURL
+			setConfigField("jira.url", configJiraURL)
 		}
 		if cmd.Flags().Changed("jira-username") {
-			cfg.JiraUsername = configJiraUsername
+			setConfigField("jira.username", configJiraUsername)
 		}
 		if cmd.Flags().Changed("jira-api-key") {
-			cfg.JiraAPIKey = configJiraAPIKey
+			setConfigField("jira.apiKey", configJiraAPIKey)
 		}
 		if cmd.Flags().Changed("jira-projects") {
-			cfg.JiraProjects = configJiraProjects
+			setConfigField("jira.projects", strings.Join(configJiraProjects, ","))
 		}
 		if cmd.Flags().Changed("jira-status") {
-			cfg.JiraStatus = configJiraStatus
+			setConfigField("jira.status", strings.Join(configJiraStatus, ","))
 		}
 		if cmd.Flags().Changed("clickup-api-key") {
-			cfg.ClickupAPIKey = configClickupAPIKey
+			setConfigField("clickup.apiKey", configClickupAPIKey)
 		}
 		if cmd.Flags().Changed("clickup-list-ids") {
-			cfg.ClickupListIDs = configClickupListID
+			setConfigField("clickup.listIds", strings.Join(configClickupListID, ","))
 		}
 		if cmd.Flags().Changed("clickup-assignee") {
-			cfg.ClickupAssignee = configClickupAssign
+			setConfigField("clickup.assignee", configClickupAssign)
+		}
+
+		if strings.TrimSpace(configOutputPath) == "" {
+			fmt.Println("unable to determine default output path; provide --output")
+			os.Exit(1)
 		}
 
 		if configSkipUI {
@@ -155,7 +164,11 @@ var configCmd = &cobra.Command{
 func init() {
 	defaultPath, err := defaultConfigPath()
 	if err != nil {
-		defaultPath = "$HOME/.commit-check/config.yaml"
+		if home, ok := os.LookupEnv("HOME"); ok && home != "" {
+			defaultPath = filepath.Join(home, ".commit-check", "config.yaml")
+		} else {
+			defaultPath = ""
+		}
 	}
 
 	rootCmd.Flags().StringVarP(&conventionType,

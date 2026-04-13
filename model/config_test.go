@@ -1,11 +1,13 @@
 package model
 
 import (
+	"os"
 	"path/filepath"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gopkg.in/yaml.v3"
 )
 
 func TestSetupConfigSetFieldValue(t *testing.T) {
@@ -47,4 +49,24 @@ func TestWriteConfigFile(t *testing.T) {
 	require.NoError(t, err)
 
 	assert.FileExists(t, output)
+
+	fileInfo, err := os.Stat(output)
+	require.NoError(t, err)
+	assert.Equal(t, os.FileMode(0o600), fileInfo.Mode().Perm())
+
+	body, err := os.ReadFile(output)
+	require.NoError(t, err)
+
+	var parsed configFile
+	err = yaml.Unmarshal(body, &parsed)
+	require.NoError(t, err)
+
+	assert.Equal(t, cfg.JiraURL, parsed.Plugins.Jira.URL)
+	assert.Equal(t, cfg.JiraUsername, parsed.Plugins.Jira.Username)
+	assert.Equal(t, cfg.JiraAPIKey, parsed.Plugins.Jira.APIKey)
+	assert.Equal(t, cfg.JiraProjects, parsed.Plugins.Jira.Projects)
+	assert.Equal(t, cfg.JiraStatus, parsed.Plugins.Jira.Status)
+	assert.Equal(t, cfg.ClickupAPIKey, parsed.Plugins.Clickup.APIKey)
+	assert.Equal(t, cfg.ClickupListIDs, parsed.Plugins.Clickup.ListIDs)
+	assert.Equal(t, cfg.ClickupAssignee, parsed.Plugins.Clickup.Assignee)
 }
