@@ -4,7 +4,7 @@ go 1.26.0
 
 require (
 	charm.land/bubbles/v2 v2.2.1
-	charm.land/bubbletea/v2 v2.1.0
+	charm.land/bubbletea/v2 v2.1.1
 	charm.land/lipgloss/v2 v2.0.6
 	github.com/go-git/go-git/v5 v5.19.3
 	github.com/raksul/go-clickup v0.0.0-20231004134427-f652c5d0a915
